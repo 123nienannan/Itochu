@@ -42,12 +42,12 @@
            <div class="info">
              <div class="tempPic"><img src="@/assets/images/logo.png"></div>
              <span>您好，李思达</span>
-             <i>
-               <img src="@/assets/images/1-1arrow.png">
-               <ul>
+             <div class="logout">
+               <span @click="signOut"><img src="@/assets/images/1-1arrow.png"></span>
+               <ul v-show="backLogout">
                  <li>退出</li>
                </ul>
-             </i>
+             </div>
            </div>
         </el-header>
         <el-main class="content">
@@ -61,6 +61,16 @@
 
 <script>
 export default {
+  data () {
+    return {
+     backLogout: false
+    }
+  },
+  methods: {
+   signOut() {
+     this.backLogout = true
+   }
+  }
 
 }
 </script>
@@ -113,15 +123,6 @@ export default {
             width: 30px;
             height: 30px;
           }
-          .now {
-            position: absolute;
-            top:10px;
-            right: 0;
-            display: none;
-            width: 6px;
-            height: 80px;
-            background-color: #4c83ff; 
-          }
         }
       }
       }
@@ -160,18 +161,22 @@ export default {
              height: 100%;
            }
          }
-         i {
+         .logout {
            margin-right: 12px;
+           width: 35px;
            position: relative;
-           img {
-             margin-left: 10px;
+           font-size: 15px;
+           span {
+             padding: 6px 13px;
            }
            ul {
              list-style: none;
-             display: none;
              position: absolute;
-             left: 0;
+             left: 4px;
              top: 21px;
+             li {
+               cursor: pointer;
+             }
            }
          }
        }

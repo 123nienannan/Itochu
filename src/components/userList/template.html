@@ -34,7 +34,7 @@
                   </el-option>
               </el-select>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
               <el-input class="select"
                   placeholder="搜索员工姓名"
                   v-model="input23">
@@ -43,7 +43,7 @@
                   </i>
           </el-input>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
               <el-button @click="adduser = true" class="select import" round>
                   <img src="@/assets/images/1-1output.png">
                   <span>批量导入</span>
@@ -63,14 +63,17 @@
       width="40">
       </el-table-column>
       <el-table-column
+      align="center"
       type="index"
       label="编号"
       width="50">
       </el-table-column>
       <el-table-column
+        align="center"
+        width="110"
         label="照片">
         <template slot-scope="scope">
-            <el-popover trigger="hover" placement="left">
+            <el-popover trigger="click" placement="right" style="left: 249px;">
               <div class="popover_box">
                 <div style="width: 60px; height: 60px; margin: 0 auto;"><img style="width: 100%; height: 100%;  border-radius: 50%; "  src="@/assets/images/logo.png"></div>
                 <el-button style="margin-left: 34px; margin-top: 5px;" type="primary" size="mini" round>修改头像</el-button>
