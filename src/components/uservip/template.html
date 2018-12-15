@@ -34,7 +34,7 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
                 <el-input class="select"
                     placeholder="搜索员工姓名"
                     v-model="input23">
@@ -43,16 +43,16 @@
                     </i>
             </el-input>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
                 <el-button @click="adduser = true" class="select import" round>
                     <i class="el-icon-plus"></i>
-                    <span>添加人员</span>
+                    <i>添加人员</i>
                 </el-button>
-            </el-col>     
-        </el-row> 
+            </el-col>
+        </el-row>
     </div>
-  
-      
+
+
       <div class="table">
         <!-- 表格部分 -->
         <el-table
@@ -265,7 +265,7 @@
           <el-button type="primary" @click="adduser = false" size="mini" round>修 改</el-button>
         </span>
 </el-dialog>
-      
+
        <div class="footer">
             <!-- 通过驳回按钮 -->
           <div style="margin-top: 20px; float: left; padding-left: 40px;">

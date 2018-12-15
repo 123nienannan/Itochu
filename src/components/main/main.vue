@@ -41,13 +41,14 @@
            </div>
            <div class="info">
              <div class="tempPic"><img src="@/assets/images/logo.png"></div>
-             <span>您好，李思达</span>
-             <div class="logout">
-               <span @click="signOut"><img src="@/assets/images/1-1arrow.png"></span>
-               <ul v-show="backLogout">
-                 <li>退出</li>
-               </ul>
-             </div>
+               <el-dropdown style="height: 40px;" trigger="click">
+                  <span class="el-dropdown-link">
+                    您好 李思达<i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>退出</el-dropdown-item>
+                  </el-dropdown-menu>
+               </el-dropdown>
            </div>
         </el-header>
         <el-main class="content">
@@ -63,13 +64,11 @@
 export default {
   data () {
     return {
-     backLogout: false
+
     }
   },
   methods: {
-   signOut() {
-     this.backLogout = true
-   }
+
   }
 
 }
@@ -224,6 +223,9 @@ export default {
    height: 71px !important;
    background-color: #fff;
    border-bottom: 1px solid #e6e7e9;
+}
+.el-main {
+  overflow: auto;
 }
 </style>
 

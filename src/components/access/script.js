@@ -1,5 +1,5 @@
 export default {
-  name: "userVipList",
+  name: "access",
   data () {
     return {
       dateData: '',

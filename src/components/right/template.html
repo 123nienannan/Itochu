@@ -1,5 +1,5 @@
-<div class="mange">
-    <div class="mange_top">
+<div class="right">
+    <div class="right_top">
         <el-row>
             </el-col>
             <el-col align="right" :span="24">
@@ -10,18 +10,13 @@
             </el-col>
         </el-row>
     </div>
-  
-      
+
+
       <div class="table">
         <!-- 表格部分 -->
         <el-table
         :data="listData"
         style="width: 100%">
-        <!-- <el-table-column
-        fixed
-        type="selection"
-        width="40">
-        </el-table-column> -->
         <el-table-column
         type="index"
         label="编号"
@@ -66,14 +61,6 @@
           prop="address"
           label="归属地">
         </el-table-column>
-        <!-- <el-table-column
-          prop="address"
-          label="公司邮箱">
-        </el-table-column> -->
-        <!-- <el-table-column 
-          prop="address"
-          label="考勤地点">
-        </el-table-column> -->
         <el-table-column
           fixed="right"
           label="操作">
@@ -89,13 +76,6 @@
                 :visible.sync="editInfo"
                 width="30%"
                 :before-close="handleClose">
-                <!-- <div class="edit_table">
-                  <div class="editTable_left"><img src="../../assets/images/logo.png"><img class="greenpass" src="../../assets/images/1-4pass.png"></div>
-                  <div class="editTable_right">
-                    <el-button size="mini" style="color: #333;" round>更换头像</el-button>
-                    <p>请上传正面未经ps照片</p>
-                  </div>
-                </div> -->
                 <div class="editTable_bottom">
                     <el-form :model="formInline" size="mini" label-position="top">
                         <el-row>
@@ -134,18 +114,6 @@
                                 </el-form-item>
                             </el-col>
                         </el-row>
-                        <!-- <el-row>
-                            <el-col :span="13">
-                                <el-form-item label="公司邮箱">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="11">
-                                <el-form-item label="个人邮箱">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row> -->
                       </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
@@ -160,13 +128,6 @@
         :visible.sync="adduser"
         width="30%"
         :before-close="handleClose">
-        <!-- <div class="edit_table">
-          <div class="editTable_left"><img src="../../assets/images/logo.png"><img class="greenpass" src="../../assets/images/1-4pass.png"></div>
-          <div class="editTable_right">
-            <el-button size="mini" style="color: #333;" round>上传头像</el-button>
-            <p>请上传正脸照用于人脸识别</p>
-          </div>
-        </div> -->
         <div class="editTable_bottom">
             <el-form :model="formInline" size="mini" label-position="top">
                 <el-row>
@@ -205,18 +166,6 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- <el-row>
-                    <el-col :span="13">
-                        <el-form-item label="公司邮箱">
-                            <el-input class="special" placeholder="请填写公司邮箱" v-model="formInline.user"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-form-item label="个人邮箱">
-                            <el-input class="special" placeholder="请填写个人邮箱" v-model="formInline.user"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row> -->
               </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -224,7 +173,7 @@
           <el-button type="primary" @click="editInfo = false" size="mini" round>添 加</el-button>
         </span>
         </el-dialog>
-      
+
        <div class="footer">
             <!-- 通过驳回按钮 -->
           <!-- <div style="margin-top: 20px; float: left; padding-left: 40px;">
@@ -238,6 +187,6 @@
             :total="50">
           </el-pagination>
        </div>
-       
+
     </div>
   </div>

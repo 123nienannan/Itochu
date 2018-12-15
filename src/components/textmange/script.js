@@ -1,5 +1,5 @@
 export default {
-  name: "userVipList",
+  name: "textMange",
   data () {
     return {
       dateData: '',
