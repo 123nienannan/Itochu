@@ -8,27 +8,27 @@
         <ul>
           <li>
             <router-link :to="{name: 'UserList'}">
-              <img src="@/assets/images/1-1emp.png">
+              <i class="side_icon icon-user"></i>
             </router-link>
           </li>
           <li>
             <router-link :to="{name: 'userVipList'}">
-              <img src="@/assets/images/1-1special.png">
+              <i class="side_icon icon-special"></i>
             </router-link>
           </li>
           <li>
             <router-link :to="{name: 'testMange'}">
-              <img src="@/assets/images/1-1calendar.png">
+              <i class="side_icon icon-calendar"></i>
             </router-link>
           </li>
           <li>
             <router-link :to="{name: 'Access'}">
-              <img src="@/assets/images/1-1access.png">
+              <i class="side_icon icon-access"></i>
             </router-link>
           </li>
           <li>
             <router-link :to="{name: 'rightAdmin'}">
-              <img src="@/assets/images/1-1admin.png">
+              <i class="side_icon icon-admin"></i>
             </router-link>
           </li>
         </ul>
@@ -115,13 +115,44 @@ export default {
                 position: absolute;
                 top:calc(50%-30px);
                 right: 0;
-                background-color: #4c83ff; 
+                background-color: #4c83ff;
+              }
+              .icon-user{
+                background:url("./../../assets/images/icon-user-active.png") no-repeat;
+              }
+              .icon-special {
+                background: url("./../../assets/images/icon-special-active.png") no-repeat;
+                  }
+              .icon-calendar {
+                background: url("./../../assets/images/icon-calendar-active.png") no-repeat;
+              }
+              .icon-access {
+                background: url("./../../assets/images/icon-access-active.png") no-repeat;
+              }
+              .icon-admin {
+                background: url("./../../assets/images/icon-admin-active.png") no-repeat;
               }
             }
           }
-          img {
-            width: 30px;
+          .side_icon {
+            width:30px;
             height: 30px;
+            background-size:cover;
+          }
+          .icon-user{
+            background: url("./../../assets/images/icon-user.png") no-repeat;
+          }
+          .icon-special {
+            background: url("./../../assets/images/icon-special.png") no-repeat;
+          }
+           .icon-calendar {
+            background: url("./../../assets/images/icon-calendar.png") no-repeat;
+          }
+           .icon-access {
+            background: url("./../../assets/images/icon-access.png") no-repeat;
+          }
+           .icon-admin {
+            background: url("./../../assets/images/icon-admin.png") no-repeat;
           }
         }
       }
@@ -152,7 +183,7 @@ export default {
          .tempPic {
            width: 40px;
            height: 40px;
-           border-radius: 50%; 
+           border-radius: 50%;
            margin-top: 12px;
            margin-right: 7px;
            overflow: hidden;
