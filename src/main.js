@@ -7,6 +7,7 @@ import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// axios.defaults.baseURL="http://192.168.0.108:8097"
 Vue.use(ElementUI)
 
 Vue.prototype.$http= axios

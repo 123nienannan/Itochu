@@ -10,7 +10,7 @@
     <h2>登录</h2>
     <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
       <el-form-item prop="username">
-          <img class="usernamepng" src="@/assets/images/icon-username.png">
+        <img class="usernamepng" src="@/assets/images/icon-username.png">
         <el-input class="input" v-model="loginForm.username" placeholder="用户名"></el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -18,8 +18,7 @@
         <el-input class="input" v-model="loginForm.password" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="btn" @click="login">登录</el-button>
-        <img class="line" src="@/assets/images/icon-arrow-right.png">
+        <el-button class="btn" @click="login">登录<i class="icon-arrow-right"></i></el-button>
       </el-form-item>
     </el-form>
 
@@ -39,29 +38,39 @@ export default {
       rules: {
         username: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+          // { min: 3, max: 5, message: '长度在 6 到 12 个字符', trigger: 'blur' }
         ],
       }
     }
   },
   methods: {
-    // login () {
-    //     this.$refs.loginForm.validate((valid) => {
-    //       if (valid) {
-    //         alert('submit!');
-    //       } else {
-    //         console.log('error submit!!');
-    //         return false;
-    //       }
-    //     });
-    //   },
     login () {
-      // this.$router.push({name: 'Main'})
-      this.$router.push({name: "UserList"})
+        this.$refs.loginForm.validate((valid) => {
+          if (valid) {
+            this.loginhandle();
+          } else {
+            return false;
+          }
+        });
+      },
+    loginhandle () {
+      this.$http.post("/itochuweb/user/login",this.loginForm)
+      .then((res) => {
+        console.log(res)
+        if(res.data.success) {
+          window.location.reload()
+          this.$router.push({name: "UserList"})
+        } else {
+          this.$message({
+          message: '用户名或密码错误',
+          type: 'error'
+        });
+        }
+      })
     }
   }
 }
@@ -72,9 +81,8 @@ export default {
 .wrap{
   width:100vw;
   height:100vh;
-  // background-color:#f9f9f9;
-  background-image: linear-gradient(-45deg, 
-		#e6e9ed 0%, 
+  background-image: linear-gradient(-45deg,
+		#e6e9ed 0%,
 		#f9f9f9 100%);
 }
 .login_box {
@@ -84,7 +92,7 @@ export default {
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%,-86%);
   .login_top {
     display: flex;
     padding-left: 50px;
@@ -119,6 +127,13 @@ export default {
     color: #fff;
     line-height: 11px;
     text-align: left;
+    .icon-arrow-right{
+      margin-left: 12px;
+      width:30px;
+      height:12px;
+      background: url("../../assets/images/icon-arrow-right.png") no-repeat;
+      display: inline-block;
+    }
   }
   .el-form-item {
     position: relative;
@@ -129,11 +144,11 @@ export default {
       z-index: 5;
     }
     .usernamepng {
-      left: 17px;
+      left: 7px;
       top: 6px;
     }
     .passwordpng {
-      left: 17px;
+      left: 7px;
       top: 6px;
     }
     .line {
@@ -150,14 +165,11 @@ export default {
     margin-left: 50px !important;
     }
   .el-input__inner {
-    text-indent: 3em !important;
+    text-indent: 1.5em !important;
     outline: none;
     border: 0;
-    box-shadow: 0px 8px 20px 4px 
+    box-shadow: 0px 8px 20px 4px
 		rgba(86, 97, 129, 0.08);
   }
-  /* .el-input {
-   width: 100%;
-  } */
 </style>
 

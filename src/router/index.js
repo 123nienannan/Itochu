@@ -11,8 +11,9 @@ import rightAdmin from '@/components/right'
 Vue.use(Router)
 
 const router = new Router({
+  mode:"history",
   routes: [
-    // {path: '/', redirect: '/main'},
+    {path: '/', redirect: '/login'},
     {
       path: '/login',
       name: 'Login',
