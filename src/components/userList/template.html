@@ -2,31 +2,31 @@
   <div class="userlist_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" v-model="value" placeholder="选择公司">
-                      <el-option
-                      v-for="item in company"
-                      :key="item.value"
-                      :label="item.label"
-                      size="small"
-                      :value="item.value">
-                      </el-option>
-              </el-select>
-          </el-col>
-          <el-col :span="5">
-              <el-select class="select" v-model="value1" placeholder="选择部门">
+              <el-select class="select" @change="changeVal" v-model="companyVal" placeholder="选择公司">
                   <el-option
-                      v-for="item in apartment"
-                      :key="item.value"
-                      :label="item.label"
-                      size="small"
-                      :value="item.value">
+                    v-for="item in company"
+                    :key="item.companyId"
+                    :label="item.attendanceAddressName"
+                    size="small"
+                    :value="item.companyId">
                   </el-option>
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select uploadPic " v-model="value2" placeholder="已上传图片">
+              <el-select class="select" v-model="apartmentVal" placeholder="选择部门">
                   <el-option
-                      v-for="item in picture"
+                      v-for="item in apartment"
+                      :key="item.departMentId"
+                      :label="item.departmentName"
+                      size="small"
+                      :value="item.departMentId">
+                  </el-option>
+              </el-select>
+          </el-col>
+          <el-col :span="5">
+              <el-select class="select uploadPic" v-model="uploadpicVal" placeholder="已上传图片">
+                  <el-option
+                      v-for="item in pictures"
                       :key="item.value"
                       :label="item.label"
                       size="small"
@@ -37,9 +37,9 @@
           <el-col :span="4">
               <el-input class="select"
                   placeholder="搜索员工姓名"
-                  v-model="input23">
-                  <i slot="suffix" class="search">
-                  <img src="@/assets/images/1-1search.png">
+                  v-model="searchText">
+                  <i slot="suffix" class="search" @click="test">
+                    <img src="@/assets/images/1-1search.png">
                   </i>
           </el-input>
           </el-col>
@@ -133,7 +133,7 @@
               width="30%"
               :before-close="handleClose">
               <div class="edit_table">
-                <div class="editTable_left"><img src="../../assets/images/logo.png"><img class="greenpass" src="../../assets/images/1-4pass.png"></div>
+                <div class="editTable_left"><img src="@/assets/images/logo.png"><img class="greenpass" src="@/assets/images/1-4pass.png"></div>
                 <div class="editTable_right">
                   <el-button size="mini" style="color: #333;" round>更换头像</el-button>
                   <p>请上传正面未经ps照片</p>

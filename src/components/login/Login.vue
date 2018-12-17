@@ -57,20 +57,19 @@ export default {
           }
         });
       },
-    loginhandle () {
-      this.$http.post("/itochuweb/user/login",this.loginForm)
-      .then((res) => {
-        console.log(res)
+    async loginhandle () {
+      const res = await this.$http.post("/itochuweb/user/login",this.loginForm)
+          console.log(res)
         if(res.data.success) {
-          window.location.reload()
           this.$router.push({name: "UserList"})
         } else {
           this.$message({
           message: '用户名或密码错误',
           type: 'error'
         });
+         this.loginForm.username = ""
+         this.loginForm.password = ""
         }
-      })
     }
   }
 }
