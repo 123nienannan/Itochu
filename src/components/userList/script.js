@@ -1,51 +1,58 @@
+import fetch from '@/utils/fetch'
+import {getCompanyList,getAparmentList,getAllUserList} from '@/utils/api'
 export default {
   name: "userList",
   data () {
     return {
       companyVal: '',
-      apartmentVal: '',
+      departmentVal: '',
       uploadpicVal: '',
       searchText: '',
       company: [],
-      apartment: [],
+      department: [],
+      pageSize:4,
+      curPage: 1,
+      totalPage: 0,
       pictures: [
         {
-          picId: 1,
-          label: '全部'
+          picId: "1",
+          label: '已上传照片'
         },
         {
-          picId: 2,
-          label: '已上传'
-        },
-        {
-          picId: 3,
-          label: '未上传'
+          picId: "2",
+          label: '未上传照片'
         }
       ],
-      editInfo: false,
       listData: [],
+      editInfo: false,
       formInline: {
         user: ''
       }
     }
   },
-  created () {
+  mounted () {
     this.getCompanyList()
-    this.getAparmentList()
+    this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
-    // async getUserList (curPage=1,companyVal='',apartmentVal='',uploadpicVal='',searchTxet='' ) {
-    //   const params = {
-    //     params: {
-    //       companyVal: '',
-    //       apartment: '',
-    //       uploadpicVal: '',
-    //       searchTxet: '',
-    //     }
-    //   }
-    // },
+    async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
+      const params = {
+          personType:1,
+          pageNum,
+          pageSize,
+          companyId,
+          departmentId,
+          imgType,
+          personName
+      }
+      const res = await fetch({method:'get',url:getAllUserList},params)
+      const {content} = res.data.data
+      const {total} = res.data.data
+      this.listData = content
+      this.totalPage = total
+    },
     async getCompanyList () {
-      const res = await this.$http.get('/itochuweb/getAllCompany')
+      const res = await fetch({method:"get",url:getCompanyList})
       const {data} = res.data
       this.company = data
     },
@@ -54,19 +61,27 @@ export default {
       this.getAparmentList(this.companyVal);
     },
 
-    async getAparmentList (id) {
-      const res = await this.$http.get('/itochuweb/getAllDepartMent',{
-        params: {
-          companyId: id
-        }
-      })
-      console.log(res);
-      const {data} = res.data
-      this.apartment = data
+    departmentChange () {
+      // if(this.companyVal == "") {
+      //   console.log(this.companyVal)
+      //   this.$message.error("请选择公司")
+      // }
     },
 
-    test(){
-      console.log(this.companyVal)
+    async getAparmentList (id) {
+      const res = await fetch({method:'get',url:getAparmentList},{companyId:id})
+      const {data} = res.data
+      this.department = data
+    },
+
+    filteSearch () {
+      this.curPage = 1
+      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    },
+
+    getCurPage (curPage) {
+      this.curPage = curPage
+      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
     },
 
     handleClose(done) {

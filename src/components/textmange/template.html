@@ -3,8 +3,9 @@
         <el-row>
             <el-col :span="12">
                     <el-date-picker
+                    @change="changeDate"
                     class="date"
-                    v-model="dateData"
+                    v-model="attendanceDate"
                     type="date"
                     placeholder="选择日期">
                  </el-date-picker>
@@ -22,55 +23,35 @@
       <div class="table">
         <!-- 表格部分 -->
         <el-table
-        :data="listData"
+        :data="attendanceList"
         style="width: 100%">
-        <el-table-column
-        fixed
-        type="selection"
-        width="40">
-        </el-table-column>
         <el-table-column
         type="index"
         label="编号"
         width="50">
         </el-table-column>
-        <!-- <el-table-column
-          label="照片">
-          <template slot-scope="scope">
-              <el-popover trigger="hover" placement="left">
-                <div class="popover_box">
-                  <div style="width: 60px; height: 60px; margin: 0 auto;"><img style="width: 100%; height: 100%;  border-radius: 50%; "  src="@/assets/images/logo.png"></div>
-                  <el-button style="margin-left: 34px; margin-top: 5px;" type="primary" size="mini" round>修改头像</el-button>
-                  <p style="color: #8c94ac; margin-top: 5px;font-size: 12px;margin-left: 19px;">请上传正面未经ps照片</p>
-                </div>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                </div>
-              </el-popover>
-            </template>
-        </el-table-column> -->
         <el-table-column
-          prop="address"
+          prop="personName"
           label="姓名">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="staffNumber"
           label="员工号">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="departmentName"
           label="部门">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="signStartTime"
           label="签到时间 ">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="signBackTime"
           label="签退时间">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="attendancePlace"
           label="考勤地点">
         </el-table-column>
         </el-table>
@@ -227,7 +208,10 @@
           class="paginator"
           background
           layout="prev, pager, next"
-          :total="50">
+          @current-change="getCurPage"
+          :current-page.sync="curPage"
+          :page-size="pageSize"
+          :total="totalPage">
         </el-pagination>
        </div>
 

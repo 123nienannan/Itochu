@@ -19,6 +19,13 @@
 .el-dialog__body {
   padding: 31px 30px;
 }
+.el-tag {
+  color: #fff;
+  border: 0;
+  padding: 0;
+  background-color: #fff;
+  border-radius: 50%;
+}
 .el-popover el-popper {
   left: 258px !important;
 }
@@ -51,9 +58,6 @@
   }
   .table {
     margin-top: 25px;
-    .popover_box {
-      text-align: center;
-    }
     .footer {
       height: 60px;
       background-color: #fff;
@@ -99,5 +103,39 @@
   .cancle_btn {
     border: 0;
     color: #4f86ff;
+  }
+  .checkPic {
+    background-color: red;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+.popover_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .pic-box{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom:15px;
+    box-shadow:2px 2px 6px rgba(0,0,0,.2);
+    img{
+      width: 100%;
+    }
+  }
+  button{
+    margin-bottom:10px;
+  }
+  .tip{
+    font-size:14px;
+    color:#666;
   }
 }

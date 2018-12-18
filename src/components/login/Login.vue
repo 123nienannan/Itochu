@@ -18,7 +18,7 @@
         <el-input class="input" v-model="loginForm.password" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="btn" @click="login">登录<i class="icon-arrow-right"></i></el-button>
+        <el-button class="btn" @click="login"><span>登录</span><i class="icon-arrow-right"></i></el-button>
       </el-form-item>
     </el-form>
 
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import fetch from "@/utils/fetch"
+import {login} from "@/utils/api"
 export default {
   name: 'Login',
   data () {
@@ -49,28 +51,30 @@ export default {
   },
   methods: {
     login () {
-        this.$refs.loginForm.validate((valid) => {
-          if (valid) {
-            this.loginhandle();
-          } else {
-            return false;
-          }
-        });
-      },
-    async loginhandle () {
-      const res = await this.$http.post("/itochuweb/user/login",this.loginForm)
-          console.log(res)
-        if(res.data.success) {
-          this.$router.push({name: "UserList"})
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          fetch({method:"post",url:login},{...this.loginForm}).then(res=>{
+            this.$router.push({name: "UserList"})
+          })
         } else {
-          this.$message({
-          message: '用户名或密码错误',
-          type: 'error'
-        });
-         this.loginForm.username = ""
-         this.loginForm.password = ""
+          return false;
         }
+      });
     }
+    // async loginhandle () {
+    //   const res = await this.$http.post("/itochuweb/user/login",this.loginForm)
+    //   console.log(res)
+    //   if(res.data.success) {
+    //     this.$router.push({name: "UserList"})
+    //   } else {
+    //     this.$message({
+    //     message: '用户名或密码错误',
+    //     type: 'error'
+    //   });
+    //     this.loginForm.username = ""
+    //     this.loginForm.password = ""
+    //   }
+    // }
   }
 }
 </script>
@@ -90,8 +94,8 @@ export default {
   padding: 10px 50px 10px 10px;
   position: fixed;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%,-86%);
+  top: 40%;
+  transform: translate(-50%,-50%);
   .login_top {
     display: flex;
     padding-left: 50px;

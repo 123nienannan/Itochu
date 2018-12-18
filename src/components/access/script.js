@@ -1,23 +1,44 @@
+import fetch from '@/utils/fetch'
+import {getAllAccessList} from '@/utils/api'
 export default {
-  name: "access",
+  name: "Access",
   data () {
     return {
-      dateData: '',
+      accessDate: '',
       editInfo: false,
       adduser: false,
-      listData: Array(10).fill({
-          id:1,
-          name:'nancy',
-          age:6,
-          mobile: 178584398,
-          email: "78t457y8.cn",
-      }),
+      curPage:1,
+      pageSize:3,
+      totalPage:0,
+      accessList:[],
       formInline: {
         user: ''
       }
     }
   },
+  mounted () {
+    this.getAllAccessList(this.curPage,this.pageSize,this.accessDate)
+  },
   methods: {
+   async getAllAccessList (pageNum,pageSize,accessDate) {
+     const params = {
+      accessDate,
+      pageNum,
+      pageSize
+     }
+     const res = await fetch({method:"get",url:getAllAccessList},params)
+     const {content,total} = res.data.data
+     this.accessList = content
+     this.totalPage = total
+    },
+    changeDate () {
+      this.curPage = 1
+      this.getAllAccessList(this.curPage,this.pageSize,this.accessDate)
+    },
+    getCurPage (curPage) {
+      this.curPage = curPage
+      this.getAllAccessList(this.curPage,this.pageSize,this.accessDate)
+    },
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
