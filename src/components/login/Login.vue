@@ -10,6 +10,7 @@
     <h2>登录</h2>
     <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
       <el-form-item prop="username">
+
         <img class="usernamepng" src="@/assets/images/icon-username.png">
         <el-input class="input" v-model="loginForm.username" placeholder="用户名"></el-input>
       </el-form-item>
@@ -40,11 +41,9 @@ export default {
       rules: {
         username: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
-            // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          // { min: 3, max: 5, message: '长度在 6 到 12 个字符', trigger: 'blur' }
         ],
       }
     }
@@ -61,20 +60,6 @@ export default {
         }
       });
     }
-    // async loginhandle () {
-    //   const res = await this.$http.post("/itochuweb/user/login",this.loginForm)
-    //   console.log(res)
-    //   if(res.data.success) {
-    //     this.$router.push({name: "UserList"})
-    //   } else {
-    //     this.$message({
-    //     message: '用户名或密码错误',
-    //     type: 'error'
-    //   });
-    //     this.loginForm.username = ""
-    //     this.loginForm.password = ""
-    //   }
-    // }
   }
 }
 </script>

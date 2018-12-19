@@ -1,50 +1,56 @@
 import fetch from '@/utils/fetch'
-import {getAllAccessList} from '@/utils/api'
+import { getAllAccessList,importAccessExcel} from '@/utils/api'
 export default {
   name: "Access",
-  data () {
+  data() {
     return {
       accessDate: '',
-      editInfo: false,
-      adduser: false,
-      curPage:1,
-      pageSize:3,
-      totalPage:0,
-      accessList:[],
-      formInline: {
-        user: ''
-      }
+      curPage: 1,
+      pageSize: 3,
+      totalPage: 0,
+      accessList: []
     }
   },
-  mounted () {
-    this.getAllAccessList(this.curPage,this.pageSize,this.accessDate)
+  mounted() {
+    this.getAllAccessList(this.curPage, this.pageSize, this.accessDate)
   },
   methods: {
-   async getAllAccessList (pageNum,pageSize,accessDate) {
-     const params = {
-      accessDate,
-      pageNum,
-      pageSize
-     }
-     const res = await fetch({method:"get",url:getAllAccessList},params)
-     const {content,total} = res.data.data
-     this.accessList = content
-     this.totalPage = total
+    async getAllAccessList(pageNum, pageSize, accessDate) {
+      const params = {
+        accessDate,
+        pageNum,
+        pageSize
+      }
+      const res = await fetch({
+        method: "get",
+        url: getAllAccessList
+      }, params)
+      const {
+        content,
+        total
+      } = res.data.data
+      this.accessList = content
+      this.totalPage = total
     },
-    changeDate () {
+    changeDate() {
       this.curPage = 1
-      this.getAllAccessList(this.curPage,this.pageSize,this.accessDate)
+      this.getAllAccessList(this.curPage, this.pageSize, this.accessDate)
     },
-    getCurPage (curPage) {
+    getCurPage(curPage) {
       this.curPage = curPage
-      this.getAllAccessList(this.curPage,this.pageSize,this.accessDate)
+      this.getAllAccessList(this.curPage, this.pageSize, this.accessDate)
     },
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
+    async importAccess() {
+      const res = await fetch({
+        method: "post",
+        url: importAccessExcel
+      }, {
+        accessDate: this.accessDate
+      })
+      const {
+        data
+      } = res.data
+      window.location.href = data
     }
   }
 }

@@ -5,15 +5,16 @@
                     <el-date-picker
                     @change="changeDate"
                     class="date"
+                    value-format="yyyy-MM-dd HH:mm:ss"
                     v-model="attendanceDate"
                     type="date"
                     placeholder="选择日期">
                  </el-date-picker>
             </el-col>
             <el-col align="right" :span="12">
-                <el-button @click="adduser = true" class="import add_btn" round>
+                <el-button @click="importAttendance" class="import add_btn" round>
                     <img src="@/assets/images/1-1output.png">
-                    <span>批量导入</span>
+                    <span>批量导出</span>
                 </el-button>
             </el-col>
         </el-row>
@@ -198,11 +199,6 @@
         </el-dialog> -->
 
        <div class="footer">
-            <!-- 通过驳回按钮 -->
-          <!-- <div style="margin-top: 20px; float: left; padding-left: 40px;">
-            <el-button size="mini">审批通过</el-button>
-            <el-button size="mini">审批驳回</el-button>
-          </div> -->
           <!-- 分页部分 -->
           <el-pagination
           class="paginator"

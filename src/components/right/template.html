@@ -3,7 +3,7 @@
         <el-row>
             </el-col>
             <el-col align="right" :span="24">
-                <el-button @click="adduser = true" class="import add_btn" round>
+                <el-button @click="addAdmin = true" class="import add_btn" round>
                     <i class="el-icon-plus"></i>
                     <span>添加管理员</span>
                 </el-button>
@@ -11,181 +11,201 @@
         </el-row>
     </div>
 
-
       <div class="table">
         <!-- 表格部分 -->
         <el-table
-        :data="listData"
+        :data="adminListData"
         style="width: 100%">
         <el-table-column
         type="index"
         label="编号"
         width="50">
         </el-table-column>
-        <!-- <el-table-column
-          label="照片">
-          <template slot-scope="scope">
-              <el-popover trigger="hover" placement="left">
-                <div class="popover_box">
-                  <div style="width: 60px; height: 60px; margin: 0 auto;"><img style="width: 100%; height: 100%;  border-radius: 50%; "  src="@/assets/images/logo.png"></div>
-                  <el-button style="margin-left: 34px; margin-top: 5px;" type="primary" size="mini" round>修改头像</el-button>
-                  <p style="color: #8c94ac; margin-top: 5px;font-size: 12px;margin-left: 19px;">请上传正面未经ps照片</p>
-                </div>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                </div>
-              </el-popover>
-            </template>
-        </el-table-column> -->
         <el-table-column
-          prop="address"
+          prop="userName"
           label="姓名">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="email"
           label="邮箱">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="phone"
           label="手机号">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="userNumber"
           label="账号 ">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="password"
           label="密码">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="companyName"
           label="归属地">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作">
           <template slot-scope="scope">
-              <el-button type="text" size="small">修改</el-button>
-              <el-button type="text" size="small" @click="editInfo = true">删除</el-button>
+              <el-button type="text" size="small" @click="amendAdmin(scope.row)">修改</el-button>
+              <el-button type="text" size="small" @click="deleteAdmin(scope.row.userId)">删除</el-button>
           </template>
         </el-table-column>
         </el-table>
         <!-- 点击修改按钮出现的弹出框 -->
         <el-dialog
-                title="修改管理员信息"
-                :visible.sync="editInfo"
-                width="30%"
-                :before-close="handleClose">
-                <div class="editTable_bottom">
-                    <el-form :model="formInline" size="mini" label-position="top">
-                        <el-row>
-                            <el-col :span="13">
-                                <el-form-item label="姓名">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="11">
-                                <el-form-item label="邮箱">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="13">
-                                <el-form-item label="手机号">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="11">
-                                <el-form-item label="归属地">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="13">
-                                <el-form-item label="账号">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="11">
-                                <el-form-item label="密码">
-                                    <el-input class="special" v-model="formInline.user"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                      </el-form>
-                </div>
-                <span slot="footer" class="dialog-footer">
-                  <el-button class="cancle_btn" @click="editInfo = false" size="mini" round>取 消</el-button>
-                  <el-button type="primary" @click="editInfo = false" size="mini" round>修 改</el-button>
-                </span>
+            title="修改管理员信息"
+            :visible.sync="showAmendDialog"
+            width="30%"
+            :before-close="handleClose">
+            <el-form
+            :rules="rules"
+            ref="amendAdminForm"
+            :model="amendAdminForm"
+            >
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-row>
+                    <el-col :span="24">
+                      <el-form-item prop="userName">
+                        <h3 class="title">姓名</h3>
+                        <el-input v-model="amendAdminForm.userName" placeholder="请填写姓名"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                      <el-form-item prop="phone">
+                        <h3 class="title">手机号</h3>
+                        <el-input v-model="amendAdminForm.phone" placeholder="请填写手机号"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                      <el-form-item prop="userNumber">
+                        <h3 class="title">账号</h3>
+                        <el-input v-model="amendAdminForm.userNumber" placeholder="请填写账号"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </el-col>
+                <el-col :span="12">
+                    <el-row>
+                        <el-col :span="24">
+                          <el-form-item prop="email">
+                            <h3 class="title">邮箱</h3>
+                            <el-input v-model="amendAdminForm.email" placeholder="请填写邮箱"></el-input>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                            <el-form-item prop="companyName">
+                                <h3 class="title">归属地</h3>
+                                <el-select class="address" v-model="amendAdminForm.companyName" placeholder="请选择归属地">
+                                    <el-option
+                                      v-for="item in companys"
+                                      :key="item.companyId"
+                                      :label="item.attendanceAddressName"
+                                      :value="item.companyId">
+                                    </el-option>
+                                  </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                          <el-form-item prop="password">
+                            <h3 class="title">名称</h3>
+                            <el-input v-model="amendAdminForm.password" placeholder="请输入名称"></el-input>
+                          </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-col>
+              </el-row>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button class="cancle_btn"  @click="cancleAmendAdmin" size="mini" round>取 消</el-button>
+                <el-button type="primary" @click="amendAdminUser" size="mini" round>修 改</el-button>
+            </span>
         </el-dialog>
 
         <!-- 点击添加成员按钮出现的弹出框  -->
         <el-dialog
-        title="添加管理员"
-        :visible.sync="adduser"
-        width="30%"
-        :before-close="handleClose">
-        <div class="editTable_bottom">
-            <el-form :model="formInline" size="mini" label-position="top">
+          title="添加管理员"
+          :visible.sync="addAdmin"
+          width="30%"
+          :before-close="handleClose">
+          <el-form
+          :rules="rules"
+          ref="addAdminForm"
+          :model="addAdminForm"
+          >
+            <el-row :gutter="20">
+              <el-col :span="12">
                 <el-row>
-                    <el-col :span="13">
-                        <el-form-item label="姓名">
-                            <el-input class="special" placeholder="请填写姓名" v-model="formInline.user"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-form-item label="邮箱">
-                            <el-input class="special" placeholder="请填写员工号" v-model="formInline.user"></el-input>
-                        </el-form-item>
-                    </el-col>
+                  <el-col :span="24">
+                    <el-form-item prop="userName">
+                      <h3 class="title">姓名</h3>
+                      <el-input v-model="addAdminForm.userName" placeholder="请填写姓名"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item prop="phone">
+                      <h3 class="title">手机号</h3>
+                      <el-input v-model="addAdminForm.phone" placeholder="请填写手机号"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item prop="userNumber">
+                      <h3 class="title">账号</h3>
+                      <el-input v-model="addAdminForm.userNumber" placeholder="请填写账号"></el-input>
+                    </el-form-item>
+                  </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span="13">
-                        <el-form-item label="手机号">
-                            <el-input class="special" placeholder="请填写考勤地点"  v-model="formInline.user"></el-input>
+              </el-col>
+              <el-col :span="12">
+                  <el-row>
+                      <el-col :span="24">
+                        <el-form-item prop="email">
+                          <h3 class="title">邮箱</h3>
+                          <el-input v-model="addAdminForm.email" placeholder="请填写邮箱"></el-input>
                         </el-form-item>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-form-item label="归属地">
-                            <el-input class="special" placeholder="请填写手机号"  v-model="formInline.user"></el-input>
+                      </el-col>
+                      <el-col :span="24">
+                          <el-form-item prop="companyName">
+                              <h3 class="title">归属地</h3>
+                              <el-select class="address" v-model="addAdminForm.companyName" placeholder="请选择归属地">
+                                  <el-option
+                                     v-for="item in companys"
+                                    :key="item.companyId"
+                                    :label="item.attendanceAddressName"
+                                    :value="item.companyId">
+                                  </el-option>
+                                </el-select>
+                          </el-form-item>
+                      </el-col>
+                      <el-col :span="24">
+                        <el-form-item prop="password">
+                          <h3 class="title">名称</h3>
+                          <el-input v-model="addAdminForm.password" placeholder="请输入名称"></el-input>
                         </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="13">
-                        <el-form-item label="账号">
-                            <el-input class="special" placeholder="请填写公司名" v-model="formInline.user"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-form-item label="密码">
-                            <el-input class="special" placeholder="请填写部门" v-model="formInline.user"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-              </el-form>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button class="cancle_btn" @click="editInfo = false" size="mini" round>取 消</el-button>
-          <el-button type="primary" @click="editInfo = false" size="mini" round>添 加</el-button>
-        </span>
+                      </el-col>
+                  </el-row>
+              </el-col>
+            </el-row>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+              <el-button class="cancle_btn"  @click="cancleAddAdmin" size="mini" round>取 消</el-button>
+              <el-button type="primary" @click="addadminUser" size="mini" round>添 加</el-button>
+          </span>
         </el-dialog>
 
        <div class="footer">
-            <!-- 通过驳回按钮 -->
-          <!-- <div style="margin-top: 20px; float: left; padding-left: 40px;">
-            <el-button size="mini">审批通过</el-button>
-            <el-button size="mini">审批驳回</el-button>
-          </div> -->
           <!-- 分页部分 -->
           <el-pagination
           class="paginator"
           background
           layout="prev, pager, next"
-          :total="50">
+          @current-change="getCurPage"
+          :current-page.sync="curPage"
+          :page-size="pageSize"
+          :total="totalPage">
         </el-pagination>
        </div>
 

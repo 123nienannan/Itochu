@@ -1,19 +1,14 @@
 import fetch from '@/utils/fetch'
-import {getAllAttendanceList} from '@/utils/api'
+import {getAllAttendanceList,importAttendanceExcel} from '@/utils/api'
 export default {
   name: "textMange",
   data () {
     return {
       attendanceDate: '',
-      editInfo: false,
-      adduser: false,
       curPage:1,
       pageSize:3,
       totalPage:0,
-      attendanceList:[],
-      formInline: {
-        user: ''
-      }
+      attendanceList:[]
     }
   },
   mounted () {
@@ -39,12 +34,10 @@ export default {
       this.curPage = curPage
       this.getAllAttendanceList(this.curPage,this.pageSize,this.attendanceDate)
     },
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
+    async importAttendance () {
+     const res = await fetch({method:'post',url:importAttendanceExcel},{attendanceDate:this.attendanceDate})
+     const {data} = res.data
+     window.location.href = data
     }
   }
 }

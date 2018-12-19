@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 // import axios from 'axios'
 import ElementUI from 'element-ui'
+import '@/assets/css/reset.css'
 import 'element-ui/lib/theme-chalk/index.css'
 
 // axios.defaults.baseURL="http://192.168.0.108:8097"
