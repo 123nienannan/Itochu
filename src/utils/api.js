@@ -12,8 +12,12 @@ const importAttendanceExcel = baseUrl + '/importAttendanceExcel' //考勤管理�
 const addAdmin = baseUrl + '/addAdmin' //添加管理员
 const deleteAdmin = baseUrl + '/deleteAdmin' //删除某一条管理员记录
 const updateAdmin = baseUrl + '/updateAdmin' //修改某一条管理员记录
-
-
+const getAdminDetail = baseUrl + '/getAdminDetail' //获取管理员详情
+const addSpecialPerson = baseUrl + '/addSpecialPerson' //添加特殊人员
+const deletePerson = baseUrl + '/deletePerson' //删除特殊人员
+const getPersonDetail = baseUrl + '/getPersonDetail' //获取特殊人员详情
+const updateSpecialPerson = baseUrl + '/updateSpecialPerson' //修改特殊人员
+const uploadBase64 = baseUrl + '/upload/base64' //base64上传图片
 
 export {
   login,
@@ -28,4 +32,10 @@ export {
   addAdmin,
   deleteAdmin,
   updateAdmin,
+  getAdminDetail,
+  addSpecialPerson,
+  deletePerson,
+  getPersonDetail,
+  updateSpecialPerson,
+  uploadBase64
 }

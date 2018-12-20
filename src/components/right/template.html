@@ -99,7 +99,7 @@
                         <el-col :span="24">
                             <el-form-item prop="companyName">
                                 <h3 class="title">归属地</h3>
-                                <el-select class="address" v-model="amendAdminForm.companyName" placeholder="请选择归属地">
+                                <el-select class="address" @change="changeamendCondtion" v-model="amendAdminForm.companyName" placeholder="请选择归属地">
                                     <el-option
                                       v-for="item in companys"
                                       :key="item.companyId"
@@ -170,7 +170,7 @@
                       <el-col :span="24">
                           <el-form-item prop="companyName">
                               <h3 class="title">归属地</h3>
-                              <el-select class="address" v-model="addAdminForm.companyName" placeholder="请选择归属地">
+                              <el-select class="address" @change="changeCondition" v-model="addAdminForm.companyName" placeholder="请选择归属地">
                                   <el-option
                                      v-for="item in companys"
                                     :key="item.companyId"
@@ -206,7 +206,7 @@
           :current-page.sync="curPage"
           :page-size="pageSize"
           :total="totalPage">
-        </el-pagination>
+         </el-pagination>
        </div>
 
     </div>

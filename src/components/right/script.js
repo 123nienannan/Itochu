@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-import {getAdminList,getCompanyList,addAdmin,deleteAdmin,updateAdmin} from '@/utils/api'
+import {getAdminList,getCompanyList,addAdmin,deleteAdmin,updateAdmin,getAdminDetail} from '@/utils/api'
 export default {
   name: "Right",
   data () {
@@ -53,31 +53,36 @@ export default {
       }
     }
   },
-  mounted() {
-   this.getAdminList(this.curPage,this.pageSize)
-   this.getAllCompany()
-  },
-  methods: {
-    //添加管理员
-    addadminUser () {
-      this.$refs.addAdminForm.validate((valid) => {
-        if (valid) {
-         fetch({method:'post',url:addAdmin},{...this.addAdminForm}).then(res => {
-           this.addAdmin = false
-           this.totalPage += 1
-           this.curPage = Math.ceil((this.totalPage + 1) / this.pageSize)
-           this.getAdminList(this.curPage,this.pageSize)
-           this.$refs.addAdminForm.resetFields()
-         })
-        } else {
-          return false;
-        }
-      });
+    mounted() {
+      this.getAdminList(this.curPage,this.pageSize)
+      this.getAllCompany()
     },
-    cancleAddAdmin () {
-      this.$refs.addAdminForm.resetFields()
-      this.addAdmin = false
-    },
+    methods: {
+      changeamendCondtion () {
+        this.amendNeedCondition.companyId = this.amendAdminForm.companyName
+      },
+      changeCondition () {
+        this.amendNeedCondition.companyId = this.addAdminForm.companyName
+      },
+      //添加管理员
+      addadminUser () {
+        this.$refs.addAdminForm.validate((valid) => {
+          if (valid) {
+          fetch({method:'post',url:addAdmin},{...this.amendNeedCondition, ...this.addAdminForm}).then(res => {
+            this.addAdmin = false
+            this.curPage = 1
+            this.getAdminList(this.curPage,this.pageSize)
+            this.$refs.addAdminForm.resetFields()
+          })
+          } else {
+            return false;
+          }
+        });
+      },
+      cancleAddAdmin () {
+        this.$refs.addAdminForm.resetFields()
+        this.addAdmin = false
+      },
     //删除管理员
     deleteAdmin (id) {
       this.$confirm('您是否确定删除该管理员?', '提示', {
@@ -86,6 +91,7 @@ export default {
         type: 'warning'
       }).then(() => {
         fetch({method:'post',url:deleteAdmin},{userId:id}).then(res => {
+          this.curPage=1
           this.getAdminList(this.curPage,this.pageSize)
           this.$message({
             type: 'success',
@@ -101,15 +107,20 @@ export default {
     },
     //点击按钮管理员数据回显
     amendAdmin(admin) {
+      console.log(admin)
       this.showAmendDialog = true
-      this.amendAdminForm.userName = admin.userName
-      this.amendAdminForm.phone = admin.phone
-      this.amendAdminForm.userNumber = admin.userNumber
-      this.amendAdminForm.email = admin.email
-      this.amendAdminForm.companyName = admin.companyName
-      this.amendAdminForm.password = admin.password
-      this.amendNeedCondition.userId = admin.userId
-      this.amendNeedCondition.companyId = admin.companyId
+      fetch({method:'get',url:getAdminDetail},{userId:admin.userId}).then(res => {
+        const {data} = res.data
+        this.amendAdminForm.userName = data.userName
+        this.amendAdminForm.phone = data.phone
+        this.amendAdminForm.userNumber = data.userNumber
+        this.amendAdminForm.email = data.email
+        this.amendAdminForm.companyName = data.companyName
+        this.amendAdminForm.password = data.password
+        this.amendNeedCondition.companyId = admin.companyName
+        this.amendNeedCondition.userId = admin.userId
+      })
+
     },
     cancleAmendAdmin () {
       this.showAmendDialog = false
@@ -134,6 +145,7 @@ export default {
       const {content,total } = res.data.data
       this.adminListData = content
       this.totalPage = total
+
     },
     getCurPage (curPage) {
       this.curPage = curPage

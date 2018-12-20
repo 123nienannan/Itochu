@@ -1,37 +1,34 @@
 <template>
-<div class="wrap">
-  <div class="login_box">
-    <div class="login_top">
+  <div class="wrap">
+    <div class="login_box">
       <div class="login_pic">
         <img src="@/assets/images/logo.png">
+        <p>伊藤忠后台管理系统</p>
       </div>
-      <div class="login_title">伊藤忠后台管理系统</div>
+      <h2 class="title">登录</h2>
+      <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label-width="0" prop="username">
+          <img class="usernamepng" src="@/assets/images/icon-username.png">
+          <el-input class="input" v-model="loginForm.username" placeholder="用户名"></el-input>
+        </el-form-item>
+        <el-form-item label-width="0" prop="password">
+          <img class="passwordpng" src="@/assets/images/icon-password.png">
+          <el-input class="input" v-model="loginForm.password" placeholder="密码"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <div class="btn-wrap">
+            <button type="button" class="btn-login" @click="login('loginForm')">登录<i class="icon-arrow-right"></i></button>
+          </div>
+        </el-form-item>
+      </el-form>
     </div>
-    <h2>登录</h2>
-    <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item prop="username">
-
-        <img class="usernamepng" src="@/assets/images/icon-username.png">
-        <el-input class="input" v-model="loginForm.username" placeholder="用户名"></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <img class="passwordpng" src="@/assets/images/icon-password.png">
-        <el-input class="input" v-model="loginForm.password" placeholder="密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button class="btn" @click="login"><span>登录</span><i class="icon-arrow-right"></i></el-button>
-      </el-form-item>
-    </el-form>
-
   </div>
-</div>
 </template>
 
 <script>
 import fetch from "@/utils/fetch"
 import {login} from "@/utils/api"
 export default {
-  name: 'Login',
   data () {
     return {
       loginForm: {
@@ -40,8 +37,8 @@ export default {
       },
       rules: {
         username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
-          ],
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
         ],
@@ -49,15 +46,15 @@ export default {
     }
   },
   methods: {
-    login () {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          fetch({method:"post",url:login},{...this.loginForm}).then(res=>{
-            this.$router.push({name: "UserList"})
-          })
-        } else {
-          return false;
-        }
+    login (name) {
+      this.$refs[name].validate((valid) => {
+         if (valid) {
+           fetch({method:"post",url:login},{...this.loginForm}).then(res=>{
+             this.$router.push({name: "UserList"})
+           })
+         } else {
+           return false;
+         }
       });
     }
   }
@@ -76,88 +73,90 @@ export default {
 .login_box {
   box-shadow: 1px 4px 1px #e9e9e9;
   background-color: #fff;
-  padding: 10px 50px 10px 10px;
+  width:556px;
+  box-sizing: border-box;
+  padding: 60px 75px 50px;
   position: fixed;
   left: 50%;
   top: 40%;
   transform: translate(-50%,-50%);
-  .login_top {
-    display: flex;
-    padding-left: 50px;
-    padding-top:50px;
-  }
   .login_pic {
-    width: 111px;
-    height: 47px;
-  }
-  .login_pic img {
-    width: 100%;
-    height: 100%;
-  }
-  .login_title {
-    font-size: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-bottom: 70px;
+    img{
+      margin-right:20px;
+    }
+    p{
+      font-size: 18px;
     color:#333;
-    line-height: 3.8;
-    padding-left: 20px;
+    }
   }
-  h2 {
-    padding-bottom: 25px;
-    padding-left: 50px;
+  h2.title {
+    font-size: 28px;
     color: #333;
     font-weight: normal;
-  }
-  .btn {
-    float: right;
-    width: 112px;
-    height: 35px;
-    background-color: #4f86ff;
-    border-radius: 23px;
-    color: #fff;
-    line-height: 11px;
-    text-align: left;
-    .icon-arrow-right{
-      margin-left: 12px;
-      width:30px;
-      height:12px;
-      background: url("../../assets/images/icon-arrow-right.png") no-repeat;
-      display: inline-block;
-    }
+    margin-bottom:40px;
   }
   .el-form-item {
     position: relative;
-    img {
-      width: 21px;
-    	height: 24px;
-      position: absolute;
-      z-index: 5;
-    }
+    margin-bottom:40px;
     .usernamepng {
-      left: 7px;
-      top: 6px;
+      width:21px;
+      height: 24px;
+      position: absolute;
+      z-index:2;
+      left: 40px;
+      top:calc( 50% - 12px )
     }
     .passwordpng {
-      left: 7px;
-      top: 6px;
+      width: 20px;
+      height: 23px;
+      position: absolute;
+      z-index:2;
+      left: 40px;
+      top:calc( 50% - 12px )
     }
-    .line {
+  }
+  .btn-wrap{
+    text-align: right;
+    .btn-login{
+      display:inline-flex;
+      align-items:center;
+      width: 132px;
+      height: 46px;
+      background-color: #4f86ff;
+      border: none;
+      padding:0 20px;
+      font-size:16px;
+      color:#ffffff;
+      justify-content: space-around;
+      border-radius: 23px;
+      outline: none;
+    }
+    .icon-arrow-right{
       width: 30px;
       height: 12px;
-      right: 18px;
-      top: 13px;
+      background: url('./../../assets/images/icon-arrow-right.png') no-repeat;
     }
   }
 }
 </style>
-<style>
- .el-form-item__content {
-    margin-left: 50px !important;
-    }
+<style lang="less">
+.wrap{
   .el-input__inner {
-    text-indent: 1.5em !important;
+    height: 46px;
+    line-height: 46px;
+    padding-left:100px;
     outline: none;
+    font-stretch: 16px;
+    color:#afb3bf;
     border: 0;
     box-shadow: 0px 8px 20px 4px
 		rgba(86, 97, 129, 0.08);
   }
+}
+
 </style>
 

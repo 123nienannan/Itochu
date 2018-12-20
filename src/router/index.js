@@ -13,7 +13,10 @@ Vue.use(Router)
 const router = new Router({
   mode:"history",
   routes: [
-    {path: '/', redirect: '/login'},
+    {
+      path: '/',
+      redirect: '/login'
+    },
     {
       path: '/login',
       name: 'Login',
@@ -23,7 +26,6 @@ const router = new Router({
       path: '/main',
       name: 'Main',
       component: Main,
-
       children: [
         {
           path: '/users',
@@ -52,7 +54,6 @@ const router = new Router({
         }
       ]
     }
-
   ]
 })
 

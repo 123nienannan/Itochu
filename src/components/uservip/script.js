@@ -1,5 +1,6 @@
 import fetch from '@/utils/fetch'
-import {getCompanyList,getAparmentList,getAllUserList} from '@/utils/api'
+import Exif from 'exif-js'
+import {getCompanyList,getAparmentList,getAllUserList,addSpecialPerson,deletePerson,getPersonDetail,updateSpecialPerson,uploadBase64} from '@/utils/api'
 export default {
   name: "userListVip",
   data () {
@@ -23,19 +24,236 @@ export default {
           label: '未上传照片'
         }
       ],
-      listData: [],
-      editInfo: false,
-      formInline: {
-        user: ''
-      }
+      checkedPic: false,
+      headerPic: require('@/assets/images/logo.png'),
+      addSpUserData: [],
+      addSpecialNeedCondition: {
+        companyId:'',
+        departmentId:'',
+        photoUrl:''
+      },
+      showaddSpUserDialog: false,
+      editInfo:false,
+      addSpecialUserForm: {
+        personName: '',
+        companyName: '',
+        phone: '',
+        companyMail: '',
+        staffNumber: '',
+        departmentName: '',
+        personalMail: ''
+      },
+      editSpecialUserForm: {
+        personName: '',
+        companyName: '',
+        phone: '',
+        companyMail: '',
+        staffNumber: '',
+        departmentName: '',
+        personalMail: ''
+      },
+      rules: {
+        personName: [
+          { required: true, message: '请输入员工姓名', trigger: 'blur' },
+        ],
+        companyName: [
+          { required: true, message: '请选择考勤地点', trigger: 'blur' },
+        ],
+        departmentName: [
+          { required: true, message: '请选择部门', trigger: 'blur' },
+        ],
+      },
+      picValue: ''
     }
   },
   mounted () {
     this.getCompanyList()
+    this.getAparmentList()
     this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
-    async getSpecialAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
+    //上传图片所需要的方法
+    uploadFile(e){
+      let files = e.target.files || e.dataTransfer.files
+      if (!files.length) return
+      this.picValue = files[0]
+      this.imgPreview(this.picValue)
+    },
+    imgPreview (file) {
+      let self = this
+      let Orientation
+      Exif.getData(file, function () {
+        Orientation = Exif.getTag(this, 'Orientation')
+      })
+      if (!file || !window.FileReader) return
+      if (/^image/.test(file.type)) {
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = function () {
+          let result = this.result
+          let img = new Image()
+          img.src = result
+          if (this.result.length <= (100 * 1024)) {
+            self.postImg(this.result)
+          } else {
+            img.onload = function () {
+              let data = self.compress(img, Orientation)
+              self.postImg(data)
+            }
+          }
+        }
+      }
+    },
+    async postImg (data) {
+      let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
+      this.headerPic = res.data.data
+    },
+    rotateImg (img, direction, canvas) {
+      const minStep = 0
+      const maxStep = 3
+      if (img == null) return
+      let height = img.height
+      let width = img.width
+      let step = 2
+      if (step == null) {
+        step = minStep
+      }
+      if (direction === 'right') {
+        step++
+        step > maxStep && (step = minStep)
+      } else {
+        step--
+        step < minStep && (step = maxStep)
+      }
+      let degree = step * 90 * Math.PI / 180
+      let ctx = canvas.getContext('2d')
+      switch (step) {
+        case 0:
+          canvas.width = width
+          canvas.height = height
+          ctx.drawImage(img, 0, 0)
+          break
+        case 1:
+          canvas.width = height
+          canvas.height = width
+          ctx.rotate(degree)
+          ctx.drawImage(img, 0, -height)
+          break
+        case 2:
+          canvas.width = width
+          canvas.height = height
+          ctx.rotate(degree)
+          ctx.drawImage(img, -width, -height)
+          break
+        case 3:
+          canvas.width = height
+          canvas.height = width
+          ctx.rotate(degree)
+          ctx.drawImage(img, -width, 0)
+          break
+      }
+    },
+    compress (img, Orientation) {
+      let canvas = document.createElement('canvas')
+      let ctx = canvas.getContext('2d')
+      let tCanvas = document.createElement('canvas')
+      let tctx = tCanvas.getContext('2d')
+      let width = img.width
+      let height = img.height
+      let ratio
+      if ((ratio = width * height / 4000000) > 1) {
+        ratio = Math.sqrt(ratio)
+        width /= ratio
+        height /= ratio
+      } else {
+        ratio = 1
+      }
+      canvas.width = width
+      canvas.height = height
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      let count
+      if ((count = width * height / 1000000) > 1) {
+        count = ~~(Math.sqrt(count) + 1)
+        let nw = ~~(width / count)
+        let nh = ~~(height / count)
+        tCanvas.width = nw
+        tCanvas.height = nh
+        for (let i = 0; i < count; i++) {
+          for (let j = 0; j < count; j++) {
+            tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh)
+            ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh)
+          }
+        }
+      } else {
+        ctx.drawImage(img, 0, 0, width, height)
+      }
+      if (Orientation !== '' && Orientation !== 1) {
+        switch (Orientation) {
+          case 6:
+            this.rotateImg(img, 'left', canvas)
+            break
+          case 8:
+            this.rotateImg(img, 'right', canvas)
+            break
+          case 3:
+            this.rotateImg(img, 'right', canvas)
+            this.rotateImg(img, 'right', canvas)
+            break
+        }
+      }
+      let ndata = canvas.toDataURL('image/jpeg', 0.1)
+      tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
+      return ndata
+    },
+    //点击添加按钮出现弹框
+    addSpecialUser () {
+        this.showaddSpUserDialog = true
+    },
+    cancleAction () {
+      this.showaddSpUserDialog = false
+      this.$refs.addSpecialUserForm.resetFields()
+
+    },
+    locationChange () {
+     this.addSpecialNeedCondition.companyId = this.addSpecialUserForm.companyName
+    },
+    departmentChange () {
+      this.addSpecialNeedCondition.departmentId = this.addSpecialUserForm.departmentName
+    },
+    //点击添加按钮
+    addSpecialPerson () {
+      this.addSpecialNeedCondition.photoUrl = this.headerPic,
+      this.$refs.addSpecialUserForm.validate((valid) => {
+        if (valid) {
+          fetch({method:'post',url:addSpecialPerson},{...this.addSpecialUserForm,...this.addSpecialNeedCondition}).then(res => {
+            this.showaddSpUserDialog = false
+            this.curPage = 1
+            this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+            this.$refs.addSpecialUserForm.resetFields()
+          })
+        } else {
+          return false;
+        }
+      });
+    },
+    //点击修改按钮,出现弹框
+    async amendSpecialUser(persons) {
+      this.editInfo = true
+      const res = await fetch({method:'get',url:getPersonDetail},{personId:persons.personId})
+      const {data} = res.data
+      this.editSpecialUserForm.personName = data.personName
+      this.editSpecialUserForm.companyName = data.companyName
+      this.editSpecialUserForm.phone = data.phone
+      this.editSpecialUserForm.companyMail = data.companyMail
+      this.editSpecialUserForm.staffNumber = data.staffNumber
+      this.editSpecialUserForm.departmentName = data.departmentName
+      this.editSpecialUserForm.personalMail = data.personalMail
+      this.addSpecialNeedCondition.photoUrl = data.photoUrl
+      this.addSpecialNeedCondition.companyId = data.companyId
+      this.addSpecialNeedCondition.departmentId = data.departmentId
+    },
+    async getSpecialAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName) {
       const params = {
           personType:2,
           pageNum,
@@ -48,7 +266,7 @@ export default {
       const res = await fetch({method:'get',url:getAllUserList},params)
       const {content} = res.data.data
       const {total} = res.data.data
-      this.listData = content
+      this.addSpUserData = content
       this.totalPage = total
     },
     async getCompanyList () {
@@ -57,19 +275,8 @@ export default {
       this.company = data
     },
 
-    changeVal() {
-      this.getAparmentList(this.companyVal);
-    },
-
-    departmentChange () {
-      // if(this.companyVal == "") {
-      //   console.log(this.companyVal)
-      //   this.$message.error("请选择公司")
-      // }
-    },
-
-    async getAparmentList (id) {
-      const res = await fetch({method:'get',url:getAparmentList},{companyId:id})
+    async getAparmentList () {
+      const res = await fetch({method:'get',url:getAparmentList})
       const {data} = res.data
       this.department = data
     },

@@ -1,8 +1,9 @@
+
 <div class="uservip_list">
   <div class="userlistvip_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" @change="changeVal" v-model="companyVal" placeholder="选择公司">
+              <el-select class="select" v-model="companyVal" placeholder="选择公司">
                   <el-option
                     v-for="item in company"
                     :key="item.companyId"
@@ -13,7 +14,7 @@
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select" @change="departmentChange" v-model="departmentVal" placeholder="选择部门">
+              <el-select class="select" v-model="departmentVal" placeholder="选择部门">
                   <el-option
                       v-for="item in department"
                       :key="item.departMentId"
@@ -44,7 +45,7 @@
           </el-input>
           </el-col>
           <el-col :span="5">
-              <el-button @click="adduser = true" class="select import" round>
+              <el-button @click="addSpecialUser" class="select import" round>
                    <i class="el-icon-plus"></i>
                   <span>添加人员</span>
               </el-button>
@@ -55,7 +56,7 @@
     <div class="table">
       <!-- 表格部分 -->
       <el-table
-      :data="listData"
+      :data="addSpUserData"
       style="width: 100%">
       <el-table-column
       fixed
@@ -119,81 +120,207 @@
         fixed="right"
         label="操作">
         <template slot-scope="scope">
-            <el-button type="text" size="small">发送链接</el-button>
-            <el-button type="text" size="small" @click="editInfo = true">修改</el-button>
+            <el-button type="text" size="small" @click="amendSpecialUser(scope.row)">修改</el-button>
+            <el-button type="text" size="small" >删除</el-button>
         </template>
       </el-table-column>
       </el-table>
-    <!-- 点击修改按钮出现的遮罩层 -->
+      <!-- 点击添加按钮出现的对话框 -->
+      <el-dialog
+      title="添加人员"
+      :visible.sync="showaddSpUserDialog"
+      width="30%"
+      :before-close="handleClose">
+      <div class="edit_table">
+        <div class="img-wrap">
+          <img :src="headerPic">
+        </div>
+        <div class="btn-wrap">
+          <button class="btn-upload">
+            上传头像
+            <input type="file" @change="uploadFile" class="upload">
+          </button>
+          <p class="tip">请上传正脸照用于人脸识别</p>
+          <p class="checkedPic" v-show="checkedPic">请上传头像</p>
+        </div>
+      </div>
+      <el-form
+            :rules="rules"
+            ref="addSpecialUserForm"
+            :model="addSpecialUserForm"
+            >
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-row>
+                    <el-col :span="24">
+                      <el-form-item prop="personName">
+                        <h3 class="title">员工姓名</h3>
+                        <el-input v-model="addSpecialUserForm.personName" placeholder="请填写姓名"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item prop="companyName">
+                            <h3 class="title">考勤地点</h3>
+                            <el-select class="address" @change="locationChange" v-model="addSpecialUserForm.companyName" placeholder="请选择考勤地点">
+                                <el-option
+                                v-for="item in company"
+                                :key="item.companyId"
+                                :label="item.attendanceAddressName"
+                                size="small"
+                                :value="item.companyId">
+                                </el-option>
+                              </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                      <el-form-item>
+                        <h3 class="title">账号</h3>
+                        <el-input v-model="addSpecialUserForm.phone" placeholder="请填写手机号"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item>
+                          <h3 class="title">公司邮箱</h3>
+                          <el-input v-model="addSpecialUserForm.companyMail" placeholder="请填写公司邮箱"></el-input>
+                        </el-form-item>
+                      </el-col>
+                  </el-row>
+                </el-col>
+                <el-col :span="12">
+                    <el-row>
+                        <el-col :span="24">
+                          <el-form-item>
+                            <h3 class="title">员工号</h3>
+                            <el-input v-model="addSpecialUserForm.staffNumber" placeholder="请填写员工号"></el-input>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                            <el-form-item prop="departmentName">
+                                <h3 class="title">部门</h3>
+                                <el-select class="address" @change="departmentChange" v-model="addSpecialUserForm.departmentName" placeholder="请选择部门">
+                                    <el-option
+                                    v-for="item in department"
+                                    :key="item.departMentId"
+                                    :label="item.departmentName"
+                                    size="small"
+                                    :value="item.departMentId">
+                                    </el-option>
+                                  </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                          <el-form-item>
+                            <h3 class="title">个人邮箱</h3>
+                            <el-input v-model="addSpecialUserForm.personalMail" placeholder="请填写个人邮箱"></el-input>
+                          </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-col>
+              </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button class="cancle_btn" @click="cancleAction" size="mini" round>取 消</el-button>
+          <el-button type="primary" size="mini" @click="addSpecialPerson" round>添 加</el-button>
+      </span>
+      </el-dialog>
+      <!-- 点击修改按钮出现的遮罩层 -->
       <el-dialog
               title="修改人员信息"
               :visible.sync="editInfo"
               width="30%"
               :before-close="handleClose">
               <div class="edit_table">
-                <div class="editTable_left"><img src="@/assets/images/logo.png"><img class="greenpass" src="@/assets/images/1-4pass.png"></div>
-                <div class="editTable_right">
-                  <el-button size="mini" style="color: #333;" round>更换头像</el-button>
-                  <p>请上传正面未经ps照片</p>
+                  <div class="img-wrap">
+                    <img :src="headerPic">
+                  </div>
+                  <div class="btn-wrap">
+                    <button class="btn-upload">
+                      上传头像
+                      <input type="file" class="upload">
+                    </button>
+                    <p class="tip">请上传正面未经PS照片</p>
+                    <p class="checkedPic" v-show="checkedPic">更换头像</p>
+                  </div>
                 </div>
-              </div>
-              <div class="editTable_bottom">
-                  <el-form :model="formInline" size="mini" label-position="top">
-                      <el-row>
-                          <el-col :span="13">
-                              <el-form-item label="员工姓名">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
+                <el-form
+                      :rules="rules"
+                      ref="editSpecialUserForm"
+                      :model="editSpecialUserForm"
+                      >
+                        <el-row :gutter="20">
+                          <el-col :span="12">
+                            <el-row>
+                              <el-col :span="24">
+                                <el-form-item>
+                                  <h3 class="title">员工姓名</h3>
+                                  <el-input v-model="editSpecialUserForm.personName" placeholder="请填写姓名"></el-input>
+                                </el-form-item>
+                              </el-col>
+                              <el-col :span="24">
+                                  <el-form-item>
+                                      <h3 class="title">考勤地点</h3>
+                                      <el-select class="address" @change="locationChange" v-model="editSpecialUserForm.companyName" placeholder="请选择考勤地点">
+                                          <el-option
+                                          v-for="item in company"
+                                          :key="item.companyId"
+                                          :label="item.attendanceAddressName"
+                                          size="small"
+                                          :value="item.companyId">
+                                          </el-option>
+                                        </el-select>
+                                  </el-form-item>
+                              </el-col>
+                              <el-col :span="24">
+                                <el-form-item>
+                                  <h3 class="title">账号</h3>
+                                  <el-input v-model="editSpecialUserForm.phone" placeholder="请填写手机号"></el-input>
+                                </el-form-item>
+                              </el-col>
+                              <el-col :span="24">
+                                  <el-form-item>
+                                    <h3 class="title">公司邮箱</h3>
+                                    <el-input v-model="editSpecialUserForm.companyMail" placeholder="请填写公司邮箱"></el-input>
+                                  </el-form-item>
+                                </el-col>
+                            </el-row>
                           </el-col>
-                          <el-col :span="11">
-                              <el-form-item label="员工号">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
+                          <el-col :span="12">
+                              <el-row>
+                                  <el-col :span="24">
+                                    <el-form-item>
+                                      <h3 class="title">员工号</h3>
+                                      <el-input v-model="editSpecialUserForm.staffNumber" placeholder="请填写员工号"></el-input>
+                                    </el-form-item>
+                                  </el-col>
+                                  <el-col :span="24">
+                                      <el-form-item>
+                                          <h3 class="title">部门</h3>
+                                          <el-select class="address" @change="departmentChange" v-model="editSpecialUserForm.departmentName" placeholder="请选择部门">
+                                              <el-option
+                                              v-for="item in department"
+                                              :key="item.departMentId"
+                                              :label="item.departmentName"
+                                              size="small"
+                                              :value="item.departMentId">
+                                              </el-option>
+                                            </el-select>
+                                      </el-form-item>
+                                  </el-col>
+                                  <el-col :span="24">
+                                    <el-form-item>
+                                      <h3 class="title">个人邮箱</h3>
+                                      <el-input v-model="editSpecialUserForm.personalMail" placeholder="请填写个人邮箱"></el-input>
+                                    </el-form-item>
+                                  </el-col>
+                              </el-row>
                           </el-col>
-                      </el-row>
-                      <el-row>
-                          <el-col :span="13">
-                              <el-form-item label="考勤地点">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
-                          </el-col>
-                          <el-col :span="11">
-                              <el-form-item label="手机号">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
-                          </el-col>
-                      </el-row>
-                      <el-row>
-                          <el-col :span="13">
-                              <el-form-item label="公司">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
-                          </el-col>
-                          <el-col :span="11">
-                              <el-form-item label="部门">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
-                          </el-col>
-                      </el-row>
-                      <el-row>
-                          <el-col :span="13">
-                              <el-form-item label="公司邮箱">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
-                          </el-col>
-                          <el-col :span="11">
-                              <el-form-item label="个人邮箱">
-                                  <el-input class="special" v-model="formInline.user"></el-input>
-                              </el-form-item>
-                          </el-col>
-                      </el-row>
-                    </el-form>
-              </div>
-              <span slot="footer" class="dialog-footer">
-                <el-button class="cancle_btn" @click="editInfo = false" size="mini" round>取 消</el-button>
-                <el-button type="primary" @click="editInfo = false" size="mini" round>修 改</el-button>
-              </span>
-            </el-dialog>
+                        </el-row>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button class="cancle_btn" @click="cancleAction" size="mini" round>取 消</el-button>
+                    <el-button type="primary" size="mini" @click="addSpecialPerson" round>添 加</el-button>
+                </span>
+       </el-dialog>
 
      <div class="footer">
           <!-- 通过驳回按钮 -->
