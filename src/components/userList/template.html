@@ -2,7 +2,7 @@
   <div class="userlist_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" @change="changeVal" v-model="companyVal" placeholder="选择公司">
+              <el-select class="select" v-model="companyVal" placeholder="选择公司">
                   <el-option
                     v-for="item in company"
                     :key="item.companyId"
@@ -13,7 +13,7 @@
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select" @change="departmentChange" v-model="departmentVal" placeholder="选择部门">
+              <el-select class="select" v-model="departmentVal" placeholder="选择部门">
                   <el-option
                       v-for="item in department"
                       :key="item.departMentId"
@@ -43,11 +43,14 @@
                   </i>
           </el-input>
           </el-col>
-          <el-col :span="5">
-              <el-button @click="adduser = true" class="select import" round>
-                  <img src="@/assets/images/1-1output.png">
-                  <span>批量导入</span>
-              </el-button>
+          <el-col :span="4" :offset="1">
+            <el-upload
+              class="upload-demo"
+              name="excelFile"
+              :multiple="false"
+              action="/itochuweb/importPersonExcel">
+              <el-button class="import" size="small" icon="el-icon-upload" type="primary">批量上传</el-button>
+            </el-upload>
           </el-col>
       </el-row>
   </div>
@@ -56,6 +59,8 @@
       <!-- 表格部分 -->
       <el-table
       :data="listData"
+      @select="handleSelectionChange"
+      @select-all="handleSelectionChange"
       style="width: 100%">
       <el-table-column
       fixed
@@ -73,21 +78,51 @@
         width="110"
         label="照片">
         <template slot-scope="scope">
-            <el-popover trigger="click" placement="right" style="left: 249px;">
+            <el-popover v-if="hhh" trigger="hover" placement="right" style="left: 249px;">
               <div class="popover_box">
                 <div class="pic-box">
-                  <img class="pic" src="@/assets/images/logo.png" />
+                  <img class="pic" :src="scope.row.distinguishImgUrl"/>
                 </div>
-                <el-button type="primary" size="mini" round>修改头像</el-button>
+                <el-button type="primary" size="mini" round>
+                  修改头像
+                  <input type="file" @change="amendUploadPic($event,scope.row.personId)">
+                  </el-button>
                 <p class="tip">请上传正面未经ps照片</p>
               </div>
               <div slot="reference" class="name-wrapper">
-                <!-- <span class="checkPic"><img style="width:100%;" :src="scope.row.distinguishImgUrl" /></span> -->
-                <span class="checkPic" v-if="scope.row.auditStatus==1">待审核</span>
-                <span class="checkPic" v-else-if="scope.row.auditStatus==2">已通过</span>
-                <span class="checkPic" v-else>已驳回</span>
+                <span class="checkPic clickChecked" v-if="scope.row.auditStatus==1">
+                  <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                </span>
+                <span class="checkPic" v-else-if="scope.row.auditStatus==2">
+                  <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                </span>
+                <span class="checkPic reject" v-else>
+                  <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                </span>
               </div>
             </el-popover>
+            <el-popover v-if="bbb" trigger="click" placement="right" style="left: 249px;">
+                <div class="popover_box" v-show="bbb">
+                  <div class="pic-box">
+                    <img class="pic" :src="scope.row.distinguishImgUrl"/>
+                  </div>
+                  <p class="tip">
+                    <el-button class="tip_turndown" @click="returnDown">驳回</el-button>
+                    <el-button type="primary" @click="agree(scope.row)">同意</el-button>
+                  </p>
+                </div>
+                <div slot="reference" class="name-wrapper">
+                  <span class="checkPic clickChecked" v-if="scope.row.auditStatus==1">
+                    <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                  </span>
+                  <span class="checkPic" v-else-if="scope.row.auditStatus==2">
+                    <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                  </span>
+                  <span class="checkPic reject" v-else>
+                    <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                  </span>
+                </div>
+              </el-popover>
         </template>
       </el-table-column>
       <el-table-column
@@ -122,13 +157,12 @@
         fixed="right"
         label="操作">
         <template slot-scope="scope">
-            <el-button type="text" size="small">发送链接</el-button>
-            <el-button type="text" size="small" @click="editInfo = true">修改</el-button>
+            <el-button type="text" size="small" @click="sendLink(scope.row.personId)">发送链接</el-button>
         </template>
       </el-table-column>
       </el-table>
     <!-- 点击修改按钮出现的遮罩层 -->
-      <el-dialog
+      <!-- <el-dialog
               title="修改人员信息"
               :visible.sync="editInfo"
               width="30%"
@@ -196,7 +230,7 @@
                 <el-button class="cancle_btn" @click="editInfo = false" size="mini" round>取 消</el-button>
                 <el-button type="primary" @click="editInfo = false" size="mini" round>修 改</el-button>
               </span>
-      </el-dialog>
+      </el-dialog> -->
 
      <div class="footer">
           <!-- 通过驳回按钮 -->
@@ -215,5 +249,5 @@
           :total="totalPage">
         </el-pagination>
      </div>
-  </div>
+    </div>
 </div>

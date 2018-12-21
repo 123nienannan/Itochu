@@ -30,7 +30,8 @@ export default {
       addSpecialNeedCondition: {
         companyId:'',
         departmentId:'',
-        photoUrl:''
+        photoUrl:'',
+        personId: ''
       },
       showaddSpUserDialog: false,
       editInfo:false,
@@ -213,7 +214,9 @@ export default {
     cancleAction () {
       this.showaddSpUserDialog = false
       this.$refs.addSpecialUserForm.resetFields()
-
+    },
+    cancleEdit () {
+      this.editInfo = false
     },
     locationChange () {
      this.addSpecialNeedCondition.companyId = this.addSpecialUserForm.companyName
@@ -237,7 +240,7 @@ export default {
         }
       });
     },
-    //点击修改按钮,出现弹框
+    //点击修改按钮,出现弹框(数据回显)
     async amendSpecialUser(persons) {
       this.editInfo = true
       const res = await fetch({method:'get',url:getPersonDetail},{personId:persons.personId})
@@ -252,6 +255,35 @@ export default {
       this.addSpecialNeedCondition.photoUrl = data.photoUrl
       this.addSpecialNeedCondition.companyId = data.companyId
       this.addSpecialNeedCondition.departmentId = data.departmentId
+      this.addSpecialNeedCondition.personId = data.personId
+    },
+    editSpecialPerson () {
+      fetch({method:'post',url:updateSpecialPerson},{...this.editSpecialUserForm, ...this.addSpecialNeedCondition}).then(res => {
+        this.editInfo = false
+        this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      })
+    },
+    //点击删除按钮，删除某条特殊人员
+    deleteSpecialUser (id) {
+      this.$confirm('您是否确定删除该人员?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        fetch({method:'post',url:deletePerson},{personId:id}).then(res => {
+          this.curPage=1
+          this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     async getSpecialAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName) {
       const params = {
@@ -284,6 +316,10 @@ export default {
     filteSearch () {
       this.curPage = 1
       this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.companyVal = ""
+      this.departmentVal = ""
+      this.uploadpicVal = ""
+      this.searchText = ""
     },
 
     getCurPage (curPage) {

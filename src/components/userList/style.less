@@ -27,6 +27,9 @@
   left: 258px !important;
 }
 .user_list {
+  .el-upload-list{
+    display: none;
+  }
   .userlist_top {
     height: 41px;
       .search {
@@ -43,15 +46,15 @@
           left: 18px;
         }
       }
-    .import {
-      margin-left: 130px;
-      background-color: #4c83ff;
-      color: #fff;
-      img {
-        width: 24px;
-        height: 13px;
+      .import {
+        width: 180px;
+        height: 40px;
+        background-color: #4c83ff;
+        box-shadow: 0px 8px 20px 4px
+          rgba(86, 97, 129, 0.08);
+        border-radius: 20px;
+        font-size: 14px;
       }
-    }
   }
   .table {
     margin-top: 25px;
@@ -102,12 +105,49 @@
     color: #4f86ff;
   }
   .checkPic {
-    background-color: red;
+    position: relative;
     display: inline-block;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    img {
+      border-radius: 50%;
+    }
+  }
+  .clickChecked::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #ffd34b;
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    left: -21px;
+  }
+  .clickChecked::after {
+    content: "点 击 审 核";
+    word-wrap: break-word;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     overflow: hidden;
+    background-color:rgba(121, 134, 176, 0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .reject::after {
+    content: "已 驳 回";
+    word-wrap: break-word;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color:rgba(121, 134, 176, 0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
 .popover_box {
@@ -129,10 +169,39 @@
     }
   }
   button{
+    position: relative;
     margin-bottom:10px;
+    width: 140px;
+    height: 36px;
+    box-shadow: 0px 8px 20px 4px
+    rgba(86, 97, 129, 0.08);
+    input {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
   }
   .tip{
     font-size:14px;
     color:#666;
+    button {
+      font-size: 16px;
+      padding: 0;
+      width: 70px;
+      height: 36px;
+      box-shadow: 0px 8px 20px 4px
+        rgba(86, 97, 129, 0.08);
+      border-radius: 18px;
+      &.tip_turndown {
+        margin-right: 10px;
+        width: auto;
+        height: auto;
+        color: #4c83ff;
+        border: 0;
+      }
+    }
   }
 }

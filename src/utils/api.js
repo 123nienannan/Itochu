@@ -18,6 +18,11 @@ const deletePerson = baseUrl + '/deletePerson' //删除特殊人员
 const getPersonDetail = baseUrl + '/getPersonDetail' //获取特殊人员详情
 const updateSpecialPerson = baseUrl + '/updateSpecialPerson' //修改特殊人员
 const uploadBase64 = baseUrl + '/upload/base64' //base64上传图片
+const importPersonExcel = baseUrl + '/importPersonExcel' //用户列表页批量导入
+const sendLink = baseUrl  +   '/sendLink'  //发送链接邮件
+const uploadBase64ByPersonId = baseUrl + '/uploadBase64ByPersonId' //修改头像
+const staffAuditStatus = baseUrl + '/staffAuditStatus' //员工照片审核
+const staffAuditStatusList = baseUrl + '/staffAuditStatusList' //员工照片批量审核
 
 export {
   login,
@@ -37,5 +42,10 @@ export {
   deletePerson,
   getPersonDetail,
   updateSpecialPerson,
-  uploadBase64
+  uploadBase64,
+  importPersonExcel,
+  sendLink,
+  uploadBase64ByPersonId,
+  staffAuditStatus,
+  staffAuditStatusList
 }
