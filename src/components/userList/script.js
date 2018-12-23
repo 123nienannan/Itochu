@@ -11,11 +11,9 @@ export default {
       searchText: '',
       company: [],
       department: [],
-      pageSize:4,
+      pageSize:8,
       curPage: 1,
       totalPage: 0,
-      hhh: false,
-      bbb:true,
       pictures: [
         {
           picId: "1",
@@ -33,7 +31,10 @@ export default {
         personId: '',
         auditStatus: 2
       },
-      picValue: ''
+      picValue: '',
+      checkValue: false,
+      personIds: []
+
     }
   },
   mounted () {
@@ -42,13 +43,29 @@ export default {
     this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
-    returnDown () {
-      this.bbb = false
+    //员工审核
+    async operation (personId,auditStatus) {
+      const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
+      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
     },
-    async agree (info) {
-      console.log( this.checked.perosnId )
-      this.checked.personId = info.personId
-      const res = await fetch({method:'post',url:staffAuditStatus},{...this.checked})
+    handleSelection (val) {
+      if(val != '') {
+        val.forEach((item) => {
+          if(item.auditStatus == 1) {
+            this.checkValue = true
+            this.personIds.push(item.personId)
+          }
+        })
+      }else {
+        this.checkValue = false
+      }
+    },
+    async bulkPass () {
+       const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'2'})
+       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    },
+    async bulkReject () {
+      const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'3'})
       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     //修改头像
@@ -87,7 +104,6 @@ export default {
     async postImg (data) {
       console.log(this.uploadNeedId)
       let res = await fetch({url: uploadBase64ByPersonId, method: 'post'}, {file: data, personId:this.uploadNeedId})
-      // this.amendedPic = res.data.data
       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     rotateImg (img, direction, canvas) {
@@ -188,9 +204,6 @@ export default {
       tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
       return ndata
     },
-    handleSelectionChange () {
-
-    },
    async sendLink (id) {
      console.log(id)
       const res =await fetch({method:'post',url:sendLink},{perosnId:id})
@@ -213,10 +226,8 @@ export default {
           personName
       }
       const res = await fetch({method:'get',url:getAllUserList},params)
-      const {content} = res.data.data
-      const {total} = res.data.data
-      this.listData = content
-      this.totalPage = total
+      this.listData = res.data.data.content
+      this.totalPage = res.data.data.total
     },
     async getCompanyList () {
       const res = await fetch({method:"get",url:getCompanyList})

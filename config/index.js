@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/itochuweb':{
-        target:"http://192.168.0.108:8097",
+        target:"http://192.168.0.140:8097",
         changeOrigin:true
       }
     },

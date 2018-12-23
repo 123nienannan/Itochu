@@ -105,15 +105,17 @@
     color: #4f86ff;
   }
   .checkPic {
-    position: relative;
-    display: inline-block;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     color: #fff;
-    img {
-      border-radius: 50%;
+    display: inline-block;
+    img{
+      border-radius:50%;
     }
+  }
+  .clickChecked{
+    position: relative;
   }
   .clickChecked::before {
     content: '';
@@ -136,6 +138,9 @@
     position: absolute;
     top: 0;
     left: 0;
+  }
+  .reject {
+    position: relative;
   }
   .reject::after {
     content: "已 驳 回";

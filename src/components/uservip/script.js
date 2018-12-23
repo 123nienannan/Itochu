@@ -1,6 +1,6 @@
 import fetch from '@/utils/fetch'
 import Exif from 'exif-js'
-import {getCompanyList,getAparmentList,getAllUserList,addSpecialPerson,deletePerson,getPersonDetail,updateSpecialPerson,uploadBase64} from '@/utils/api'
+import {staffAuditStatus,staffAuditStatusList,getCompanyList,getAparmentList,getAllUserList,addSpecialPerson,deletePerson,getPersonDetail,updateSpecialPerson,uploadBase64} from '@/utils/api'
 export default {
   name: "userListVip",
   data () {
@@ -11,7 +11,7 @@ export default {
       searchText: '',
       company: [],
       department: [],
-      pageSize:2,
+      pageSize:8,
       curPage: 1,
       totalPage: 0,
       pictures: [
@@ -64,7 +64,9 @@ export default {
           { required: true, message: '请选择部门', trigger: 'blur' },
         ],
       },
-      picValue: ''
+      picValue: '',
+      checkValue: false,
+      personIds: []
     }
   },
   mounted () {
@@ -73,6 +75,31 @@ export default {
     this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
+    handleSelection (val) {
+      if(val != '') {
+        val.forEach((item) => {
+          if(item.auditStatus == 1) {
+            this.checkValue = true
+            this.personIds.push(item.personId)
+          }
+        })
+      }else {
+        this.checkValue = false
+      }
+    },
+    async bulkPass () {
+       const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'2'})
+       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    },
+    async bulkReject () {
+      const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'3'})
+      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    },
+    //员工审核
+    async operation (personId,auditStatus) {
+      const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
+      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    },
     //上传图片所需要的方法
     uploadFile(e){
       let files = e.target.files || e.dataTransfer.files
