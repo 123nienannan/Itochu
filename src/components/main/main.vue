@@ -26,7 +26,7 @@
               <i class="side_icon icon-access"></i>
             </router-link>
           </li>
-          <li>
+          <li v-if="showAdmin">
             <router-link :to="{name: 'rightAdmin'}">
               <i class="side_icon icon-admin"></i>
             </router-link>
@@ -41,9 +41,9 @@
            </div>
            <div class="info">
              <div class="tempPic"><img src="@/assets/images/logo.png"></div>
-               <el-dropdown style="height: 40px;" trigger="click">
-                  <span class="el-dropdown-link">
-                    您好 李思达<i class="el-icon-arrow-down el-icon--right"></i>
+               <el-dropdown @command="handleCommand" style="height: 40px;" trigger="click">
+                  <span class="el-dropdown-link">你好
+                    {{loginName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>退出</el-dropdown-item>
@@ -61,14 +61,33 @@
 </template>
 
 <script>
+import fetch from '@/utils/fetch'
+import {loginOut,getAdminType} from '@/utils/api'
 export default {
   data () {
     return {
-
+      loginName: '',
+      showAdmin: false
     }
   },
+  mounted () {
+    this.getType()
+  },
   methods: {
-
+    async getType () {
+      const res =await fetch({method:'get',url:getAdminType})
+      console.log(res)
+      this.loginName = res.data.data.userName
+      if(res.data.data.type == 1) {
+        this.showAdmin = true
+      }else {
+        this.showAdmin = false
+      }
+    },
+    async handleCommand () {
+     const res = await fetch({method:'post',url:loginOut})
+     this.$router.push({name: "Login"})
+    }
   }
 
 }

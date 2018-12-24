@@ -32,8 +32,8 @@ export default {
         auditStatus: 2
       },
       picValue: '',
-      checkValue: false,
-      personIds: []
+      personIds: [],
+      vals: []
 
     }
   },
@@ -48,17 +48,25 @@ export default {
       const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
     },
+    //批量员工审核
     handleSelection (val) {
-      if(val != '') {
-        val.forEach((item) => {
-          if(item.auditStatus == 1) {
-            this.checkValue = true
+      if(val != "") {
+        val.map((item,index)=>{
+          if(item.auditStatus===1){
+            item.checked = true
             this.personIds.push(item.personId)
           }
         })
       }else {
-        this.checkValue = false
+       this.listData.forEach((item) => {
+         item.checked = false
+       })
       }
+    },
+    changePassOrReject(info) {
+        if(info.checked) {
+          this.personIds.push(info.personId)
+        }
     },
     async bulkPass () {
        const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'2'})
@@ -205,16 +213,14 @@ export default {
       return ndata
     },
    async sendLink (id) {
-     console.log(id)
+
       const res =await fetch({method:'post',url:sendLink},{perosnId:id})
+      this.$message({
+        message: '发送链接成功',
+        type: 'success'
+      });
+      this.$router.push({name:"LinkPage"})
     },
-    // //批量导入
-    // async bulkImport (e) {
-    //   let formData = new FormData();
-    //   formData.append("excelFile",e.target.files[0])
-    //   const res = await fetch({method:'post',url:importPersonExcel},formData)
-    //   console.log(res);
-    // },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {
           personType:1,
@@ -226,7 +232,10 @@ export default {
           personName
       }
       const res = await fetch({method:'get',url:getAllUserList},params)
-      this.listData = res.data.data.content
+      res.data.data.content.map((item,index)=>{
+        return item.checked = false
+      })
+      this.listData=res.data.data.content
       this.totalPage = res.data.data.total
     },
     async getCompanyList () {

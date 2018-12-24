@@ -23,7 +23,9 @@ const sendLink = baseUrl  +   '/sendLink'  //发送链接邮件
 const uploadBase64ByPersonId = baseUrl + '/uploadBase64ByPersonId' //修改头像
 const staffAuditStatus = baseUrl + '/staffAuditStatus' //员工照片审核
 const staffAuditStatusList = baseUrl + '/staffAuditStatusList' //员工照片批量审核
-
+const loginOut = baseUrl + '/user/loginOut' // 退出登录
+const getAdminType = baseUrl + '/getAdminType' //获取管理员信息类型
+const staffBindPhoto = baseUrl + '/staffBindPhoto' //上传员工头像
 export {
   login,
   getCompanyList,
@@ -47,5 +49,8 @@ export {
   sendLink,
   uploadBase64ByPersonId,
   staffAuditStatus,
-  staffAuditStatusList
+  staffAuditStatusList,
+  loginOut,
+  getAdminType,
+  staffBindPhoto
 }

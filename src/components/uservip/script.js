@@ -24,8 +24,9 @@ export default {
           label: '未上传照片'
         }
       ],
-      checkedPic: false,
-      headerPic: require('@/assets/images/logo.png'),
+      checkedPicture: false,
+      checkedamendPicture:false,
+      headerPic: "",
       addSpUserData: [],
       addSpecialNeedCondition: {
         companyId:'',
@@ -65,8 +66,6 @@ export default {
         ],
       },
       picValue: '',
-      checkValue: false,
-      personIds: []
     }
   },
   mounted () {
@@ -75,26 +74,6 @@ export default {
     this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
-    handleSelection (val) {
-      if(val != '') {
-        val.forEach((item) => {
-          if(item.auditStatus == 1) {
-            this.checkValue = true
-            this.personIds.push(item.personId)
-          }
-        })
-      }else {
-        this.checkValue = false
-      }
-    },
-    async bulkPass () {
-       const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'2'})
-       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
-    },
-    async bulkReject () {
-      const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'3'})
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
-    },
     //员工审核
     async operation (personId,auditStatus) {
       const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
@@ -135,6 +114,7 @@ export default {
     async postImg (data) {
       let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
       this.headerPic = res.data.data
+      this.checkedPicture = false
     },
     rotateImg (img, direction, canvas) {
       const minStep = 0
@@ -253,7 +233,11 @@ export default {
     },
     //点击添加按钮
     addSpecialPerson () {
-      this.addSpecialNeedCondition.photoUrl = this.headerPic,
+      this.addSpecialNeedCondition.photoUrl = this.headerPic
+      if(this.addSpecialNeedCondition.photoUrl == "") {
+        this.checkedPicture = true
+        return false
+      }
       this.$refs.addSpecialUserForm.validate((valid) => {
         if (valid) {
           fetch({method:'post',url:addSpecialPerson},{...this.addSpecialUserForm,...this.addSpecialNeedCondition}).then(res => {
@@ -280,6 +264,7 @@ export default {
       this.editSpecialUserForm.departmentName = data.departmentName
       this.editSpecialUserForm.personalMail = data.personalMail
       this.addSpecialNeedCondition.photoUrl = data.photoUrl
+      this.headerPic = data.photoUrl
       this.addSpecialNeedCondition.companyId = data.companyId
       this.addSpecialNeedCondition.departmentId = data.departmentId
       this.addSpecialNeedCondition.personId = data.personId

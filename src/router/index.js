@@ -7,6 +7,7 @@ import userVipList from '@/components/uservip'
 import testMange from '@/components/textmange'
 import Access from '@/components/access'
 import rightAdmin from '@/components/right'
+import LinkPage from '@/components/linkPage/LinkPage'
 
 Vue.use(Router)
 
@@ -53,6 +54,11 @@ const router = new Router({
           name: 'rightAdmin'
         }
       ]
+    },
+    {
+      path: '/linkPage',
+      name: 'LinkPage',
+      component: LinkPage
     }
   ]
 })

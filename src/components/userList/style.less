@@ -105,17 +105,18 @@
     color: #4f86ff;
   }
   .checkPic {
+    position: relative;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     color: #fff;
+    overflow: hidden;
     display: inline-block;
-    img{
-      border-radius:50%;
-    }
   }
-  .clickChecked{
-    position: relative;
+  .clickChecked {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
   }
   .clickChecked::before {
     content: '';
@@ -124,10 +125,10 @@
     background-color: #ffd34b;
     border-radius: 50%;
     position: absolute;
-    top: 20px;
-    left: -21px;
+    top:33px;
+    left: 25px;
   }
-  .clickChecked::after {
+  .checkPic::after {
     content: "点 击 审 核";
     word-wrap: break-word;
     width: 50px;
@@ -139,10 +140,25 @@
     top: 0;
     left: 0;
   }
-  .reject {
+  .checkPicStatus {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    overflow: hidden;
+    display: inline-block;
     position: relative;
   }
-  .reject::after {
+  .checkPicaudit {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .checkPicaudit::after {
     content: "已 驳 回";
     word-wrap: break-word;
     width: 50px;

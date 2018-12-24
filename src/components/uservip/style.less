@@ -115,55 +115,25 @@
         left:0;
       }
     }
+   }
 
-
-  // .editTable_left {
-  //   position: relative;
-  //   justify-content: space-around;
-  //   width: 70px;
-  //   height: 70px;
-  //   img {
-  //     width: 100%;
-  //     height: 100%;
-  //     border-radius: 50%;
-  //   }
-  //   .greenpass {
-  //     width: 16px;
-  //     height: 16px;
-  //     position: absolute;
-  //     right: -7px;
-  //     bottom: 3px;
-  //   }
-  // }
-  // .editTable_right {
-  //   padding-top: 16px;
-  //   margin-left: 40px;
-  //   p {
-  //      color: #8c94ac;
-  //      font-size: 12px;
-  //      margin-top: 6px;
-  //   }
-  // }
-  }
-  // .editTable_bottom {
-  //   margin-top: 25px;
-  // }
   .cancle_btn {
     border: 0;
     color: #4f86ff;
   }
   .checkPic {
+    position: relative;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     color: #fff;
+    overflow: hidden;
     display: inline-block;
-    img{
-      border-radius:50%;
-    }
   }
   .clickChecked{
-    position: relative;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
   }
   .clickChecked::before {
     content: '';
@@ -172,10 +142,10 @@
     background-color: #ffd34b;
     border-radius: 50%;
     position: absolute;
-    top: 20px;
-    left: -21px;
+    top:33px;
+    left: 25px;
   }
-  .clickChecked::after {
+  .checkPic::after {
     content: "点 击 审 核";
     word-wrap: break-word;
     width: 50px;
@@ -187,10 +157,25 @@
     top: 0;
     left: 0;
   }
-  .reject {
+  .checkPicStatus {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    overflow: hidden;
+    display: inline-block;
     position: relative;
   }
-  .reject::after {
+  .checkPicaudit {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .checkPicaudit::after {
     content: "已 驳 回";
     word-wrap: break-word;
     width: 50px;

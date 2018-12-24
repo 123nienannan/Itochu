@@ -57,16 +57,7 @@
       <!-- 表格部分 -->
       <el-table
       :data="addSpUserData"
-      @selection-change="handleSelection"
       style="width: 100%">
-      <el-table-column
-      fixed
-      type="selection"
-      width="40">
-      <template slot-scope="scope">
-          <el-checkbox v-model="checkValue" v-if='scope.row.auditStatus==1'></el-checkbox>
-      </template>
-      </el-table-column>
       <el-table-column
       align="center"
       type="index"
@@ -105,61 +96,16 @@
                     </div>
                 </div>
 
-                <div class="checkPic clickChecked" slot="reference" v-if="scope.row.auditStatus==1">
-                    <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                <div class="clickChecked" slot="reference" v-if="scope.row.auditStatus==1">
+                    <div class="checkPic"><img style="width:100%;" :src="scope.row.distinguishImgUrl"/></div>
                   </div>
-                  <div class="checkPic" slot="reference" v-if="scope.row.auditStatus==2">
-                      <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                  <div slot="reference" v-if="scope.row.auditStatus==2">
+                      <div class="checkPicStatus"><img style="width:100%;" :src="scope.row.distinguishImgUrl"/></div>
                   </div>
-                  <div class="checkPic reject" slot="reference" v-if="scope.row.auditStatus==3">
-                      <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
+                  <div class="reject" slot="reference" v-if="scope.row.auditStatus==3">
+                      <div class="checkPicaudit"><img style="width:100%;" :src="scope.row.distinguishImgUrl"/></div>
                   </div>
               </el-popover>
-
-            <!-- <el-popover trigger="hover" placement="right" style="left: 249px;">
-              <div class="popover_box">
-                <div class="pic-box">
-                  <img class="pic" :src="scope.row.distinguishImgUrl"/>
-                </div>
-                <el-button type="primary" size="mini" round>
-                  修改头像
-                  <input type="file" @change="amendUploadPic($event,scope.row.personId)">
-                  </el-button>
-                <p class="tip">请上传正面未经ps照片</p>
-              </div>
-              <div class="checkPic" slot="reference" v-if="scope.row.auditStatus==2">
-                <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
-              </div>
-            </el-popover>
-            <el-popover trigger="hover" placement="right" style="left: 249px;">
-              <div class="popover_box">
-                <div class="pic-box">
-                  <img class="pic" :src="scope.row.distinguishImgUrl"/>
-                </div>
-                <p class="tip">
-                  <el-button class="tip_turndown" @click="operation(scope.row.personId, '3')">驳回</el-button>
-                  <el-button type="primary" @click="operation(scope.row.personId, '2')">同意</el-button>
-                </p>
-              </div>
-              <div class="checkPic clickChecked" slot="reference" v-if="scope.row.auditStatus==1">
-                <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
-              </div>
-            </el-popover>
-            <el-popover trigger="hover" placement="right" style="left: 249px;">
-              <div class="popover_box">
-                <div class="pic-box">
-                  <img class="pic" :src="scope.row.distinguishImgUrl"/>
-                </div>
-                <el-button type="primary" size="mini" round>
-                  修改头像
-                  <input type="file" @change="amendUploadPic($event,scope.row.personId)">
-                  </el-button>
-                <p class="tip">请上传正面未经ps照片</p>
-              </div>
-              <div class="checkPic reject" slot="reference" v-if="scope.row.auditStatus==3">
-                  <img style="width:100%;" :src="scope.row.distinguishImgUrl"/>
-              </div>
-            </el-popover> -->
         </template>
       </el-table-column>
       <el-table-column
@@ -226,7 +172,7 @@
             <input type="file" @change="uploadFile" class="upload">
           </button>
           <p class="tip">请上传正脸照用于人脸识别</p>
-          <p class="checkedPic" v-show="checkedPic">请上传头像</p>
+          <p class="checkedPic" style="color: #f56c6c;" v-show="checkedPicture">请上传头像</p>
         </div>
       </div>
       <el-form
@@ -320,11 +266,11 @@
                   </div>
                   <div class="btn-wrap">
                     <button class="btn-upload">
-                      上传头像
+                        更换头像
                       <input type="file" class="upload">
                     </button>
                     <p class="tip">请上传正面未经PS照片</p>
-                    <p class="checkedPic" v-show="checkedPic">更换头像</p>
+                    <p class="checkedPic" v-show="checkedamendPicture">更换头像</p>
                   </div>
                 </div>
                 <el-form
@@ -408,11 +354,6 @@
       </el-dialog>
 
      <div class="footer">
-          <!-- 通过驳回按钮 -->
-        <div style="margin-top: 20px; float: left; padding-left: 40px;">
-          <el-button size="mini" @click="bulkPass">审批通过</el-button>
-          <el-button size="mini" @click="bulkReject">审批驳回</el-button>
-        </div>
         <!-- 分页部分 -->
         <el-pagination
           class="paginator"
