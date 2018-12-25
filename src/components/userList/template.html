@@ -2,7 +2,7 @@
   <div class="userlist_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" v-model="companyVal" placeholder="选择公司">
+              <el-select class="select" :clearable="true" v-model="companyVal" placeholder="选择公司">
                   <el-option
                     v-for="item in company"
                     :key="item.companyId"
@@ -13,7 +13,7 @@
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select" v-model="departmentVal" placeholder="选择部门">
+              <el-select class="select" :clearable="true" v-model="departmentVal" placeholder="选择部门">
                   <el-option
                       v-for="item in department"
                       :key="item.departMentId"
@@ -24,7 +24,7 @@
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select uploadPic" v-model="uploadpicVal" placeholder="选择照片">
+              <el-select :clearable="true" class="select uploadPic" v-model="uploadpicVal" placeholder="选择照片">
                   <el-option
                       v-for="item in pictures"
                       :key="item.picId"

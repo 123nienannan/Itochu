@@ -150,7 +150,7 @@ export default {
     line-height: 46px;
     padding-left:100px;
     outline: none;
-    font-stretch: 16px;
+    font-size: 16px;
     color:#afb3bf;
     border: 0;
     box-shadow: 0px 8px 20px 4px

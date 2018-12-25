@@ -3,6 +3,21 @@ import {getAdminList,getCompanyList,addAdmin,deleteAdmin,updateAdmin,getAdminDet
 export default {
   name: "Right",
   data () {
+   var validateMoblie = (rule, value, callback) => {
+      if (!(/^1[34578]\d{9}$/.test(value))) {
+        callback(new Error('请输入正确的手机格式'))
+      }else {
+        callback()
+      }
+    };
+    var validateEmail = (rule, value, callback) => {
+      let email = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
+      if (!email.test(value)) {
+        callback(new Error('请输入正确的邮箱格式'))
+      }else {
+        callback()
+      }
+    };
     return {
       addAdmin: false,
       showAmendDialog: false,
@@ -36,10 +51,10 @@ export default {
           { required: true, message: '请输入姓名', trigger: 'blur' },
         ],
         email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { validator: (rule, value, callback)=>{validateEmail(rule, value, callback)},  trigger: 'blur' },
         ],
         phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { validator: (rule, value, callback)=>{validateMoblie(rule, value, callback)}, trigger: 'blur' },
         ],
         companyName: [
           { required: true, message: '请输入归属地', trigger: 'change' },
@@ -60,7 +75,6 @@ export default {
     methods: {
       changeamendCondtion () {
         this.amendNeedCondition.companyId = this.amendAdminForm.companyName
-        // console.log(this.amendNeedCondition.companyId)
       },
       changeCondition () {
         this.amendNeedCondition.companyId = this.addAdminForm.companyName

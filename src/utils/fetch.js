@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import router from "../router";
 
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials = true
@@ -41,10 +42,17 @@ const fetch = (opts, data) => {
         if (res.data.success) {
           resolve(res)
         } else {
-          Message({
-            type:"error",
-            message: res.data.message
-          })
+          if(res.data.errcode == -1){
+            router.push({name:"Login"})
+            return false
+          }else {
+            Message({
+              type:"error",
+              message: res.data.message
+            })
+            return false
+          }
+          return false
         }
       }
     ).catch(

@@ -172,7 +172,7 @@
             <input type="file" @change="uploadFile" class="upload">
           </button>
           <p class="tip">请上传正脸照用于人脸识别</p>
-          <p class="checkedPic" style="color: #f56c6c;" v-show="checkedPicture">请上传头像</p>
+          <p class="checkedPic" style="color: #f56c6c;" v-if="checkedPicture">请上传头像</p>
         </div>
       </div>
       <el-form

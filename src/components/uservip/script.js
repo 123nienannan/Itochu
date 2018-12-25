@@ -26,7 +26,7 @@ export default {
       ],
       checkedPicture: false,
       checkedamendPicture:false,
-      headerPic: "",
+      headerPic: '',
       addSpUserData: [],
       addSpecialNeedCondition: {
         companyId:'',
@@ -220,6 +220,8 @@ export default {
     },
     cancleAction () {
       this.showaddSpUserDialog = false
+      this.checkedPicture = false
+      this.headerPic = ""
       this.$refs.addSpecialUserForm.resetFields()
     },
     cancleEdit () {
@@ -244,7 +246,9 @@ export default {
             this.showaddSpUserDialog = false
             this.curPage = 1
             this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+            this.addSpecialNeedCondition.photoUrl = ""
             this.$refs.addSpecialUserForm.resetFields()
+            this.headerPic = ""
           })
         } else {
           return false;

@@ -219,7 +219,7 @@ export default {
         message: '发送链接成功',
         type: 'success'
       });
-      this.$router.push({name:"LinkPage"})
+      // this.$router.push({name:"LinkPage"})
     },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {
@@ -253,10 +253,10 @@ export default {
     filteSearch () {
       this.curPage = 1
       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
-      this.companyVal = ""
-      this.departmentVal = ""
-      this.uploadpicVal = ""
-      this.searchText = ""
+      // this.companyVal = ""
+      // this.departmentVal = ""
+      // this.uploadpicVal = ""
+      // this.searchText = ""
     },
 
     getCurPage (curPage) {
