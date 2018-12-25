@@ -11,19 +11,19 @@
     <span>NO. {{linkNumber}}</span>
   </div>
   <div class="link_content">
-       <img src="../../assets/images/background_logo.png">
+       <img src="pictureUpload">
   </div>
   <div class="link_button">
     <span>
        上传头像
-       <input type="file">
+       <input @change="uploadPicture" type="file">
     </span>
   </div>
   <div class="link_tip">
     请上传正面未经PS照片
   </div>
   <div class="link_btn">
-    <span>确定</span>
+    <span @click="confirm">确定</span>
   </div>
 </div>
 </div>
@@ -31,14 +31,16 @@
 
 <script>
 import fetch from "@/utils/fetch"
-import {getPersonDetail} from "@/utils/api"
+import Exif from 'exif-js'
+import {getPersonDetail,uploadBase64,staffBindPhoto} from "@/utils/api"
 export default {
   data () {
     return {
     personId:"",
     linkName: "",
-    linkNumber: ""
-
+    linkNumber: "",
+    picValue: '',
+    pictureUpload: require("../../assets/images/background_logo.png")
     }
   },
   mounted () {
@@ -47,16 +49,153 @@ export default {
     this.getPersonDetail({personId:this.personId})
   },
   methods: {
+    uploadPicture (e) {
+      let files = e.target.files || e.dataTransfer.files
+      if (!files.length) return
+      this.picValue = files[0]
+      this.imgPreview(this.picValue)
+    },
+    imgPreview (file) {
+      let self = this
+      let Orientation
+      Exif.getData(file, function () {
+        Orientation = Exif.getTag(this, 'Orientation')
+      })
+      if (!file || !window.FileReader) return
+      if (/^image/.test(file.type)) {
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = function () {
+          let result = this.result
+          let img = new Image()
+          img.src = result
+          if (this.result.length <= (100 * 1024)) {
+            self.postImg(this.result)
+          } else {
+            img.onload = function () {
+              let data = self.compress(img, Orientation)
+              self.postImg(data)
+            }
+          }
+        }
+      }
+    },
+    async postImg (data) {
+      let res = await fetch({url: uploadBase64, method: 'post'}, {file: data, personId:this.personId})
+      this.pictureUpload = res.data.data
+    },
+    rotateImg (img, direction, canvas) {
+      const minStep = 0
+      const maxStep = 3
+      if (img == null) return
+      let height = img.height
+      let width = img.width
+      let step = 2
+      if (step == null) {
+        step = minStep
+      }
+      if (direction === 'right') {
+        step++
+        step > maxStep && (step = minStep)
+      } else {
+        step--
+        step < minStep && (step = maxStep)
+      }
+      let degree = step * 90 * Math.PI / 180
+      let ctx = canvas.getContext('2d')
+      switch (step) {
+        case 0:
+          canvas.width = width
+          canvas.height = height
+          ctx.drawImage(img, 0, 0)
+          break
+        case 1:
+          canvas.width = height
+          canvas.height = width
+          ctx.rotate(degree)
+          ctx.drawImage(img, 0, -height)
+          break
+        case 2:
+          canvas.width = width
+          canvas.height = height
+          ctx.rotate(degree)
+          ctx.drawImage(img, -width, -height)
+          break
+        case 3:
+          canvas.width = height
+          canvas.height = width
+          ctx.rotate(degree)
+          ctx.drawImage(img, -width, 0)
+          break
+      }
+    },
+    compress (img, Orientation) {
+      let canvas = document.createElement('canvas')
+      let ctx = canvas.getContext('2d')
+      let tCanvas = document.createElement('canvas')
+      let tctx = tCanvas.getContext('2d')
+      let width = img.width
+      let height = img.height
+      let ratio
+      if ((ratio = width * height / 4000000) > 1) {
+        ratio = Math.sqrt(ratio)
+        width /= ratio
+        height /= ratio
+      } else {
+        ratio = 1
+      }
+      canvas.width = width
+      canvas.height = height
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      let count
+      if ((count = width * height / 1000000) > 1) {
+        count = ~~(Math.sqrt(count) + 1)
+        let nw = ~~(width / count)
+        let nh = ~~(height / count)
+        tCanvas.width = nw
+        tCanvas.height = nh
+        for (let i = 0; i < count; i++) {
+          for (let j = 0; j < count; j++) {
+            tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh)
+            ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh)
+          }
+        }
+      } else {
+        ctx.drawImage(img, 0, 0, width, height)
+      }
+      if (Orientation !== '' && Orientation !== 1) {
+        switch (Orientation) {
+          case 6:
+            this.rotateImg(img, 'left', canvas)
+            break
+          case 8:
+            this.rotateImg(img, 'right', canvas)
+            break
+          case 3:
+            this.rotateImg(img, 'right', canvas)
+            this.rotateImg(img, 'right', canvas)
+            break
+        }
+      }
+      let ndata = canvas.toDataURL('image/jpeg', 0.1)
+      tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
+      return ndata
+    },
     async getPersonDetail (option) {
       const res = await fetch({method:'get',url:getPersonDetail},option)
       const {data} = res.data
       this.linkName = data.personName
       this.linkNumber = data.staffNumber
-      console.log(data)
+    },
+    async confirm () {
+      const res = await fetch({method:'post',url:staffBindPhoto},{personId:this.personId,photoUrl:this.pictureUpload})
+      this.$message({
+          message: '信息完成',
+          type: 'success'
+        });
     }
-
   },
-
 }
 </script>
 
@@ -129,12 +268,12 @@ display: none;/*隐藏滚轮*/
     }
     .link_button {
       padding-top: 43px;
-     text-align: center;
+      text-align: center;
      span {
        font-size: 24px;
        display: inline-block;
        position: relative;
-       width: 224px;
+       width: 36%;
        height: 46px;
        line-height: 46px;
        background-color: #ffffff;
@@ -176,7 +315,7 @@ display: none;/*隐藏滚轮*/
         color: #fff;
         font-size: 16px;
         display: inline-block;
-        width: 320px;
+        width: 55%;
         height: 46px;
         line-height: 46px;
         background-color: #4c83ff;

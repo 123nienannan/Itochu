@@ -13,6 +13,7 @@ Vue.use(Router)
 
 const router = new Router({
   mode:"history",
+  base: "itochuWeb",
   routes: [
     {
       path: '/',

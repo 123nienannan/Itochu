@@ -60,6 +60,7 @@ export default {
     methods: {
       changeamendCondtion () {
         this.amendNeedCondition.companyId = this.amendAdminForm.companyName
+        // console.log(this.amendNeedCondition.companyId)
       },
       changeCondition () {
         this.amendNeedCondition.companyId = this.addAdminForm.companyName
@@ -106,8 +107,7 @@ export default {
       });
     },
     //点击按钮管理员数据回显
-    amendAdmin(admin) {
-      console.log(admin)
+    amendAdmin (admin) {
       this.showAmendDialog = true
       fetch({method:'get',url:getAdminDetail},{userId:admin.userId}).then(res => {
         const {data} = res.data
@@ -117,10 +117,9 @@ export default {
         this.amendAdminForm.email = data.email
         this.amendAdminForm.companyName = data.companyName
         this.amendAdminForm.password = data.password
-        this.amendNeedCondition.companyId = admin.companyName
-        this.amendNeedCondition.userId = admin.userId
+        this.amendNeedCondition.companyId = data.companyId
+        this.amendNeedCondition.userId = data.userId
       })
-
     },
     cancleAmendAdmin () {
       this.showAmendDialog = false

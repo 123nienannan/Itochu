@@ -17,9 +17,9 @@ export default {
   methods: {
    async getAllAttendanceList (pageNum,pageSize,attendanceDate) {
      const params = {
-      attendanceDate,
       pageNum,
-      pageSize
+      pageSize,
+      attendanceDate
      }
      const res = await fetch({method:"get",url:getAllAttendanceList},params)
      const {content} = res.data.data

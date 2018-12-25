@@ -13,11 +13,11 @@
         </el-form-item>
         <el-form-item label-width="0" prop="password">
           <img class="passwordpng" src="@/assets/images/icon-password.png">
-          <el-input class="input" v-model="loginForm.password" placeholder="密码"></el-input>
+          <el-input class="input" type="password"  v-model="loginForm.password" @keyup.enter.native="login('loginForm')" placeholder="密码"></el-input>
         </el-form-item>
         <el-form-item>
           <div class="btn-wrap">
-            <button type="button" class="btn-login" @click="login('loginForm')">登录<i class="icon-arrow-right"></i></button>
+            <button class="btn-login" @click.prevent="login('loginForm')">登录<i class="icon-arrow-right"></i></button>
           </div>
         </el-form-item>
       </el-form>
