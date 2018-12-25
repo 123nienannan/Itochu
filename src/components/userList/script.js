@@ -219,7 +219,7 @@ export default {
         message: '发送链接成功',
         type: 'success'
       });
-      // this.$router.push({name:"LinkPage"})
+      this.$router.push({name:"LinkPage"})
     },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {

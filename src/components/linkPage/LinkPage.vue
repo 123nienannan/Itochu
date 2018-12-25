@@ -11,7 +11,8 @@
     <span>NO. {{linkNumber}}</span>
   </div>
   <div class="link_content">
-       <img src="pictureUpload">
+       <div class="mask" v-show="visibleMask">待审核...</div>
+       <div class="savePic"><img :src="pictureUpload"></div>
   </div>
   <div class="link_button">
     <span>
@@ -40,7 +41,8 @@ export default {
     linkName: "",
     linkNumber: "",
     picValue: '',
-    pictureUpload: require("../../assets/images/background_logo.png")
+    pictureUpload: "",
+    visibleMask: false
     }
   },
   mounted () {
@@ -83,6 +85,7 @@ export default {
     async postImg (data) {
       let res = await fetch({url: uploadBase64, method: 'post'}, {file: data, personId:this.personId})
       this.pictureUpload = res.data.data
+      this.visibleMask = true
     },
     rotateImg (img, direction, canvas) {
       const minStep = 0
@@ -185,6 +188,11 @@ export default {
     async getPersonDetail (option) {
       const res = await fetch({method:'get',url:getPersonDetail},option)
       const {data} = res.data
+      console.log(data)
+      this.pictureUpload = data.photoUrl
+      if(data.status == 1) {
+        this.visibleMask = true
+      }
       this.linkName = data.personName
       this.linkNumber = data.staffNumber
     },
@@ -235,6 +243,7 @@ display: none;/*隐藏滚轮*/
       }
     }
     .link_content {
+      background: url("../../assets/images/background_logo.png") no-repeat center center;
       margin: 0 auto;
       margin-top: 60px;
       border-radius: 50%;
@@ -244,14 +253,35 @@ display: none;/*隐藏滚轮*/
       background-color: #ffffff;
       box-shadow: 0px 8px 20px 4px
         rgba(0, 0, 0, 0.08);
-      img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        width: 144px;
-        height: 60px;
-      }
+        .mask {
+          height: 160px;
+          line-height: 160px;
+          border-radius: 50%;
+          position: absolute;
+          text-align: center;
+          width:160px;
+          left: 0;
+          overflow: hidden;
+          z-index: 9;
+          top: 0;
+          color: #fff;
+          font-size: 18px;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+        .savePic {
+          position: relative;
+          border-radius: 50%;
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          img {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+         }
+        }
+
     }
     .link_tip {
       width: 100%;
@@ -270,7 +300,7 @@ display: none;/*隐藏滚轮*/
       padding-top: 43px;
       text-align: center;
      span {
-       font-size: 24px;
+       font-size: 18px;
        display: inline-block;
        position: relative;
        width: 36%;
@@ -294,10 +324,8 @@ display: none;/*隐藏滚轮*/
       width: 100%;
       padding-top: 17px;
       span {
-        padding: 2px;
+        padding: 3px;
         display: inline-block;
-        width: 90px;
-        height: 26px;
         background-color: #ffbf6b;
         border-radius: 13px;
         color: #fff;
@@ -324,7 +352,5 @@ display: none;/*隐藏滚轮*/
     }
   }
 }
-
-
 </style>
 

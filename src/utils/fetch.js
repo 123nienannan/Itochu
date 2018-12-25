@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-import router from "../router";
+import router from "../router"
 
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials = true

@@ -1,19 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Login from '@/components/login/Login'
-import Main from '@/components/main/Main'
-import UserList from '@/components/UserList'
-import userVipList from '@/components/uservip'
-import testMange from '@/components/textmange'
-import Access from '@/components/access'
-import rightAdmin from '@/components/right'
+const Main = () => import(/* webpackChunkName: 'home' */ '@/components/main/Main')
+// import Main from '@/components/main/Main'
+// import UserList from '@/components/UserList'
+const UserList = () => import(/* webpackChunkName: 'home' */ '@/components/UserList')
+// import userVipList from '@/components/uservip'
+const userVipList = () => import(/* webpackChunkName: 'home' */ '@/components/uservip')
+// import testMange from '@/components/textmange'
+const testMange = () => import(/* webpackChunkName: 'home' */ '@/components/textmange')
+// import Access from '@/components/access'
+const Access = () => import(/* webpackChunkName: 'home' */ '@/components/access')
+// import rightAdmin from '@/components/right'
+const rightAdmin = () => import(/* webpackChunkName: 'home' */ '@/components/right')
 import LinkPage from '@/components/linkPage/LinkPage'
 
 Vue.use(Router)
 
 const router = new Router({
   mode:"history",
-  // base: "itochuWeb",
+  base: "itochuWeb",
   routes: [
     {
       path: '/',
