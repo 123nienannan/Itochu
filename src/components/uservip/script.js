@@ -1,11 +1,12 @@
 import fetch from '@/utils/fetch'
 import Exif from 'exif-js'
-import {staffAuditStatus,staffAuditStatusList,getCompanyList,getAparmentList,getAllUserList,addSpecialPerson,deletePerson,getPersonDetail,updateSpecialPerson,uploadBase64} from '@/utils/api'
+import {getAdminType,staffAuditStatus,uploadBase64ByPersonId,staffAuditStatusList,getCompanyList,getAparmentList,getAllUserList,addSpecialPerson,deletePerson,getPersonDetail,updateSpecialPerson,uploadBase64} from '@/utils/api'
 export default {
   name: "userListVip",
   data () {
     return {
       companyVal: '',
+      companyValId: '',
       departmentVal: '',
       uploadpicVal: '',
       searchText: '',
@@ -27,6 +28,7 @@ export default {
       checkedPicture: false,
       checkedamendPicture:false,
       headerPic: '',
+      editheaderPic: "",
       addSpUserData: [],
       addSpecialNeedCondition: {
         companyId:'',
@@ -54,6 +56,7 @@ export default {
         departmentName: '',
         personalMail: ''
       },
+      type:'',
       rules: {
         personName: [
           { required: true, message: '请输入员工姓名', trigger: 'blur' },
@@ -66,20 +69,109 @@ export default {
         ],
       },
       picValue: '',
+      listPicVal: '',
+      uploadNeedId: '',
+      edituploadVal: ''
     }
   },
   mounted () {
+    this.getadminType()
     this.getCompanyList()
     this.getAparmentList()
-    this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
+    async getadminType() {
+     const res = await fetch({method:'get',url:getAdminType})
+      this.addSpecialNeedCondition.companyId = res.data.data.companyId
+      this.type=res.data.data.type
+      if(this.type != 1) {
+       this.addSpecialUserForm.companyName = res.data.data.companyName
+       this.companyVal = res.data.data.companyName
+       this.companyValId = res.data.data.companyId
+       this.editSpecialUserForm.companyName = res.data.data.companyName
+      }
+    },
+     //列表页面里修改头像
+     amendUploadPic (e,id) {
+      this.uploadNeedId = id
+      let files = e.target.files || e.dataTransfer.files
+      if (!files.length) return
+      this.listPicVal = files[0]
+      this.imagePreview(this.listPicVal)
+    },
+    imagePreview (file) {
+      let self = this
+      let Orientation
+      Exif.getData(file, function () {
+        Orientation = Exif.getTag(this, 'Orientation')
+      })
+      if (!file || !window.FileReader) return
+      if (/^image/.test(file.type)) {
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = function () {
+          let result = this.result
+          let img = new Image()
+          img.src = result
+          if (this.result.length <= (100 * 1024)) {
+            self.postImage(this.result)
+          } else {
+            img.onload = function () {
+              let data = self.compress(img, Orientation)
+              self.postImage(data)
+            }
+          }
+        }
+      }
+    },
+    async postImage (data) {
+      let res = await fetch({url: uploadBase64ByPersonId, method: 'post'}, {file: data, personId:this.uploadNeedId})
+      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    },
     //员工审核
     async operation (personId,auditStatus) {
       const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
-      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
-    //上传图片所需要的方法
+    //点击修改里面的上传头像
+    editUploadFile (e) {
+      let files = e.target.files || e.dataTransfer.files
+      if (!files.length) return
+      this.edituploadVal = files[0]
+      this.editImgPreview(this.edituploadVal)
+    },
+    editImgPreview (file) {
+      let self = this
+      let Orientation
+      Exif.getData(file, function () {
+        Orientation = Exif.getTag(this, 'Orientation')
+      })
+      if (!file || !window.FileReader) return
+      if (/^image/.test(file.type)) {
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = function () {
+          let result = this.result
+          let img = new Image()
+          img.src = result
+          if (this.result.length <= (100 * 1024)) {
+            self.editPostImg(this.result)
+          } else {
+            img.onload = function () {
+              let data = self.compress(img, Orientation)
+              self.editPostImg(data)
+            }
+          }
+        }
+      }
+    },
+    async editPostImg (data) {
+      let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
+      this.editheaderPic = res.data.data
+    },
+
+    //点击添加按钮里面的上传图片所需要的方法
     uploadFile(e){
       let files = e.target.files || e.dataTransfer.files
       if (!files.length) return
@@ -112,6 +204,7 @@ export default {
       }
     },
     async postImg (data) {
+      console.log("lalalal")
       let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
       this.headerPic = res.data.data
       this.checkedPicture = false
@@ -214,10 +307,6 @@ export default {
       tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
       return ndata
     },
-    //点击添加按钮出现弹框
-    addSpecialUser () {
-        this.showaddSpUserDialog = true
-    },
     cancleAction () {
       this.showaddSpUserDialog = false
       this.checkedPicture = false
@@ -230,8 +319,14 @@ export default {
     locationChange () {
      this.addSpecialNeedCondition.companyId = this.addSpecialUserForm.companyName
     },
+    locationChangeamend() {
+      this.addSpecialNeedCondition.companyId = this.editSpecialUserForm.companyName
+    },
     departmentChange () {
       this.addSpecialNeedCondition.departmentId = this.addSpecialUserForm.departmentName
+    },
+    departmentChangeAmend () {
+      this.addSpecialNeedCondition.departmentId = this.editSpecialUserForm.departmentName
     },
     //点击添加按钮
     addSpecialPerson () {
@@ -245,10 +340,11 @@ export default {
           fetch({method:'post',url:addSpecialPerson},{...this.addSpecialUserForm,...this.addSpecialNeedCondition}).then(res => {
             this.showaddSpUserDialog = false
             this.curPage = 1
-            this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+            this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
             this.addSpecialNeedCondition.photoUrl = ""
             this.$refs.addSpecialUserForm.resetFields()
             this.headerPic = ""
+            window.location.reload()
           })
         } else {
           return false;
@@ -268,7 +364,7 @@ export default {
       this.editSpecialUserForm.departmentName = data.departmentName
       this.editSpecialUserForm.personalMail = data.personalMail
       this.addSpecialNeedCondition.photoUrl = data.photoUrl
-      this.headerPic = data.photoUrl
+      this.editheaderPic = data.photoUrl
       this.addSpecialNeedCondition.companyId = data.companyId
       this.addSpecialNeedCondition.departmentId = data.departmentId
       this.addSpecialNeedCondition.personId = data.personId
@@ -276,7 +372,7 @@ export default {
     editSpecialPerson () {
       fetch({method:'post',url:updateSpecialPerson},{...this.editSpecialUserForm, ...this.addSpecialNeedCondition}).then(res => {
         this.editInfo = false
-        this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+        this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
       })
     },
     //点击删除按钮，删除某条特殊人员
@@ -288,7 +384,7 @@ export default {
       }).then(() => {
         fetch({method:'post',url:deletePerson},{personId:id}).then(res => {
           this.curPage=1
-          this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+          this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -331,16 +427,12 @@ export default {
 
     filteSearch () {
       this.curPage = 1
-      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
-      this.companyVal = ""
-      this.departmentVal = ""
-      this.uploadpicVal = ""
-      this.searchText = ""
+      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
 
     getCurPage (curPage) {
       this.curPage = curPage
-      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
 
     handleClose(done) {

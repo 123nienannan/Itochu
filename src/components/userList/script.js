@@ -1,11 +1,12 @@
 import fetch from '@/utils/fetch'
 import Exif from 'exif-js'
-import {staffAuditStatus,staffAuditStatusList,uploadBase64ByPersonId,getCompanyList,getAparmentList,getAllUserList,importPersonExcel,sendLink} from '@/utils/api'
+import {getAdminType,staffAuditStatus,staffAuditStatusList,uploadBase64ByPersonId,getCompanyList,getAparmentList,getAllUserList,importPersonExcel,sendLink} from '@/utils/api'
 export default {
   name: "userList",
   data () {
     return {
       companyVal: '',
+      companyValId: '',
       departmentVal: '',
       uploadpicVal: '',
       searchText: '',
@@ -33,20 +34,30 @@ export default {
       },
       picValue: '',
       personIds: [],
-      vals: []
+      vals: [],
+      type: ''
 
     }
   },
   mounted () {
+    this.getadminType()
     this.getCompanyList()
     this.getAparmentList()
-    this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+    this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
     //员工审核
+  async getadminType() {
+    const res = await fetch({method:'get',url:getAdminType})
+    this.type=res.data.data.type
+    if(this.type != 1) {
+      this.companyVal = res.data.data.companyName
+      this.companyValId = res.data.data.companyId
+    }
+  },
     async operation (personId,auditStatus) {
       const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     //批量员工审核
     handleSelection (val) {
@@ -70,11 +81,11 @@ export default {
     },
     async bulkPass () {
        const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'2'})
-       this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+       this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     async bulkReject () {
       const res = await fetch({method:'post',url:staffAuditStatusList},{personIds:this.personIds,auditStatus:'3'})
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     //修改头像
     amendUploadPic (e,id) {
@@ -110,9 +121,9 @@ export default {
       }
     },
     async postImg (data) {
-      console.log(this.uploadNeedId)
+      // console.log(this.uploadNeedId)
       let res = await fetch({url: uploadBase64ByPersonId, method: 'post'}, {file: data, personId:this.uploadNeedId})
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     rotateImg (img, direction, canvas) {
       const minStep = 0
@@ -212,14 +223,13 @@ export default {
       tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
       return ndata
     },
-   async sendLink (id) {
-
+    async sendLink (id) {
       const res =await fetch({method:'post',url:sendLink},{perosnId:id})
       this.$message({
         message: '发送链接成功',
         type: 'success'
       });
-      this.$router.push({name:"LinkPage"})
+      // this.$router.push({name:"LinkPage"})
     },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {
@@ -252,16 +262,12 @@ export default {
 
     filteSearch () {
       this.curPage = 1
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
-      // this.companyVal = ""
-      // this.departmentVal = ""
-      // this.uploadpicVal = ""
-      // this.searchText = ""
+      this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
 
     getCurPage (curPage) {
       this.curPage = curPage
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
 
     handleClose(done) {

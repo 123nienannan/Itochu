@@ -42,17 +42,18 @@ const fetch = (opts, data) => {
         if (res.data.success) {
           resolve(res)
         } else {
-          if(res.data.errcode == -1){
-            router.push({name:"Login"})
-            return false
-          }else {
-            Message({
-              type:"error",
-              message: res.data.message
-            })
-            return false
-          }
-          return false
+          Message({
+            type: "error",
+            message: res.data.data.message
+          })
+          // switch(res.data.errcode){
+          //   case -1:
+          //     router.push({name:"Login"})
+          //     break;
+          //   default:
+          //     router.push({name:"Login"})
+          //     break;
+          // }
         }
       }
     ).catch(

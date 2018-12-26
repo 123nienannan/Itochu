@@ -61,54 +61,55 @@
 </template>
 
 <script>
-import fetch from '@/utils/fetch'
-import {loginOut,getAdminType} from '@/utils/api'
+import fetch from "@/utils/fetch"
+import { loginOut, getAdminType } from "@/utils/api"
 export default {
-  data () {
+  data() {
     return {
-      loginName: '',
+      loginName: "",
       showAdmin: false
-    }
+    };
   },
-  mounted () {
+  mounted() {
     this.getType()
   },
   methods: {
-    async getType () {
-      const res =await fetch({method:'get',url:getAdminType})
-      console.log(res)
-      this.loginName = res.data.data.userName
-      if(res.data.data.type == 1) {
+    async getType() {
+      const res = await fetch({ method: "get", url: getAdminType })
+      console.log(res);
+      this.loginName = res.data.data.userName;
+      if (res.data.data.type == 1) {
         this.showAdmin = true
-      }else {
+      } else {
         this.showAdmin = false
       }
     },
-    async handleCommand () {
-     const res = await fetch({method:'post',url:loginOut})
-     this.$router.push({name: "Login"})
+    async handleCommand() {
+      const res = await fetch({ method: "post", url: loginOut })
+      localStorage.removeItem('token')
+      this.$router.push({ name: "Login" })
     }
   }
-
-}
+};
 </script>
 
  <style lang="less" scoped>
- .wrapper {
-    width:100vw;
-    height:100vh;
-    background-color: #f5f6fa;
-    .main {
-      height: 100%;
-      .aside {
-        background-color: #fff;
-        border-right: 1px solid #e6e7e9;
-        .menu {
-          text-align: center;
-          width: 70px;
-          height: 70px;
-          line-height: 70px;
-          border-bottom: solid 1px #e6e7e9;
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f5f6fa;
+  .main {
+    height: 100%;
+    .aside {
+      background-color: #fff;
+      border-right: 1px solid #e6e7e9;
+      .menu {
+        text-align: center;
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        box-sizing: border-box;
+        border-bottom: solid 1px #e6e7e9;
         img {
           width: 20px;
           height: 20px;
@@ -117,131 +118,134 @@ export default {
       ul {
         margin-top: 100px;
         li {
-          a{
+          a {
             position: relative;
-            width:70px;
-            height:80px;
+            width: 70px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             &.router-link-active {
               background-color: #ecf5ff;
               &::after {
-                content: '';
+                content: "";
                 width: 5px;
                 height: 60px;
                 position: absolute;
-                top:calc(50%-30px);
+                top: calc(50%-30px);
                 right: 0;
                 background-color: #4c83ff;
               }
-              .icon-user{
-                background:url("./../../assets/images/icon-user-active.png") no-repeat;
+              .icon-user {
+                background: url("./../../assets/images/icon-user-active.png")
+                  no-repeat;
               }
               .icon-special {
-                background: url("./../../assets/images/icon-special-active.png") no-repeat;
-                  }
+                background: url("./../../assets/images/icon-special-active.png")
+                  no-repeat;
+              }
               .icon-calendar {
-                background: url("./../../assets/images/icon-calendar-active.png") no-repeat;
+                background: url("./../../assets/images/icon-calendar-active.png")
+                  no-repeat;
               }
               .icon-access {
-                background: url("./../../assets/images/icon-access-active.png") no-repeat;
+                background: url("./../../assets/images/icon-access-active.png")
+                  no-repeat;
               }
               .icon-admin {
-                background: url("./../../assets/images/icon-admin-active.png") no-repeat;
+                background: url("./../../assets/images/icon-admin-active.png")
+                  no-repeat;
               }
             }
           }
           .side_icon {
-            width:30px;
+            width: 30px;
             height: 30px;
-            background-size:cover;
+            background-size: cover;
           }
-          .icon-user{
+          .icon-user {
             background: url("./../../assets/images/icon-user.png") no-repeat;
           }
           .icon-special {
             background: url("./../../assets/images/icon-special.png") no-repeat;
           }
-           .icon-calendar {
+          .icon-calendar {
             background: url("./../../assets/images/icon-calendar.png") no-repeat;
           }
-           .icon-access {
+          .icon-access {
             background: url("./../../assets/images/icon-access.png") no-repeat;
           }
-           .icon-admin {
+          .icon-admin {
             background: url("./../../assets/images/icon-admin.png") no-repeat;
           }
         }
       }
+    }
+    .top_header {
+      display: flex;
+      height:70px!important;
+      line-height: 70px;
+      background-color: #fff;
+      border-bottom: 1px solid #e6e7e9;
+      .tip {
+        margin: 0 auto;
+        justify-content: center;
+        align-items: center;
+        span {
+          color: #333;
+        }
+        img {
+          width: 80px;
+          height: 33px;
+          margin-right: 5px;
+          vertical-align: middle;
+        }
       }
-      .top_header {
+      .info {
         display: flex;
-        line-height: 70px;
-       .tip {
-         margin: 0 auto;
-         justify-content: center;
-         align-items: center;
-         span {
-           color: #333;
-         }
-         img {
-           width: 80px;
-           height: 33px;
-           margin-right: 5px;
-           vertical-align: middle;
-         }
-       }
-       .info {
-         display: flex;
-         margin-right: 30px;
-         span {
-           color: #003391;
-         }
-         .tempPic {
-           width: 40px;
-           height: 40px;
-           border-radius: 50%;
-           margin-top: 12px;
-           margin-right: 7px;
-           overflow: hidden;
-           img {
-             width: 100%;
-             height: 100%;
-           }
-         }
-         .logout {
-           margin-right: 12px;
-           width: 35px;
-           position: relative;
-           font-size: 15px;
-           span {
-             padding: 6px 13px;
-           }
-           ul {
-             list-style: none;
-             position: absolute;
-             left: 4px;
-             top: 21px;
-             li {
-               cursor: pointer;
-             }
-           }
-         }
-       }
+        margin-right: 30px;
+        span {
+          color: #003391;
+        }
+        .tempPic {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-top: 12px;
+          margin-right: 7px;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .logout {
+          margin-right: 12px;
+          width: 35px;
+          position: relative;
+          font-size: 15px;
+          span {
+            padding: 6px 13px;
+          }
+          ul {
+            list-style: none;
+            position: absolute;
+            left: 4px;
+            top: 21px;
+            li {
+              cursor: pointer;
+            }
+          }
+        }
       }
     }
- }
-
+  }
+}
 </style>
 <style>
-.el-aside, .el-main {
+.el-aside,
+.el-main {
   overflow: hidden;
-}
-.wrapper .main .top_header[data-v-61fb690f] {
-   height: 71px !important;
-   background-color: #fff;
-   border-bottom: 1px solid #e6e7e9;
 }
 .el-main {
   overflow: auto;

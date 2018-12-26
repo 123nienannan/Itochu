@@ -2,7 +2,7 @@
   <div class="userlist_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" :clearable="true" v-model="companyVal" placeholder="选择公司">
+              <el-select class="select" :disabled="type!=1" :clearable="true" v-model="companyVal" placeholder="选择公司">
                   <el-option
                     v-for="item in company"
                     :key="item.companyId"

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import { Message } from 'element-ui'
 import Login from '@/components/login/Login'
 const Main = () => import(/* webpackChunkName: 'home' */ '@/components/main/Main')
 // import Main from '@/components/main/Main'
@@ -70,6 +70,21 @@ const router = new Router({
     }
   ]
 })
-
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    localStorage.removeItem('token')
+    return next()
+  }
+  const token = localStorage.getItem('token')
+  if (token) {
+    next()
+  } else {
+    next('/login')
+    Message({
+      message: '请先登录',
+      type: 'warning'
+    });
+  }
+})
 
 export default router
