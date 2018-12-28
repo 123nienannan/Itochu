@@ -47,7 +47,6 @@ export default {
         if (valid) {
           fetch({ method: "post", url: login }, this.loginForm ).then(
             res => {
-              console.log("22222")
               res.data.data.token = "token"
               localStorage.setItem('token', res.data.data.token)
               this.$router.push({ name: "UserList" })

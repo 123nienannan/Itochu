@@ -23,7 +23,7 @@ export default {
       showAmendDialog: false,
       companys:[],
       curPage:1,
-      pageSize:3,
+      pageSize:10,
       totalPage:0,
       adminListData:[],
       amendAdminForm: {

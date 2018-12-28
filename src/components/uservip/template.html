@@ -3,7 +3,7 @@
   <div class="userlistvip_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" :disabled="type!=1" v-model="companyVal" placeholder="选择公司">
+              <el-select class="select" @change="companyChange"  :disabled="type!=1" v-model="companyVal" placeholder="选择公司">
                   <el-option
                     v-for="item in company"
                     :key="item.companyId"

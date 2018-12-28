@@ -12,7 +12,7 @@ export default {
       searchText: '',
       company: [],
       department: [],
-      pageSize:8,
+      pageSize:10,
       curPage: 1,
       totalPage: 0,
       pictures: [
@@ -53,8 +53,11 @@ export default {
     if(this.type != 1) {
       this.companyVal = res.data.data.companyName
       this.companyValId = res.data.data.companyId
-    }
+     }
   },
+    companyChange() {
+      this.companyValId = this.companyVal
+    },
     async operation (personId,auditStatus) {
       const res = await fetch({method:'post',url:staffAuditStatus},{personId,auditStatus})
       this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
@@ -121,7 +124,6 @@ export default {
       }
     },
     async postImg (data) {
-      // console.log(this.uploadNeedId)
       let res = await fetch({url: uploadBase64ByPersonId, method: 'post'}, {file: data, personId:this.uploadNeedId})
       this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
@@ -229,7 +231,6 @@ export default {
         message: '发送链接成功',
         type: 'success'
       });
-      // this.$router.push({name:"LinkPage"})
     },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {

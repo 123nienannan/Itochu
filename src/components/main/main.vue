@@ -1,35 +1,45 @@
 <template>
   <div class="wrapper">
     <el-container class="main">
-      <el-aside class="aside" width="70px">
+      <el-aside class="aside" width="100px">
         <div class="menu">
           <img src="@/assets/images/menu.png">
         </div>
         <ul>
           <li>
-            <router-link :to="{name: 'UserList'}">
-              <i class="side_icon icon-user"></i>
-            </router-link>
+            <el-tooltip class="item" effect="dark" content="人员管理" placement="right">
+                <router-link :to="{name: 'UserList'}">
+                <i class="side_icon icon-user"></i>
+                </router-link>
+            </el-tooltip>
           </li>
           <li>
-            <router-link :to="{name: 'userVipList'}">
-              <i class="side_icon icon-special"></i>
-            </router-link>
+            <el-tooltip class="item" effect="dark" content="特殊人员" placement="right">
+              <router-link :to="{name: 'userVipList'}">
+                <i class="side_icon icon-special"></i>
+              </router-link>
+            </el-tooltip>
           </li>
           <li>
-            <router-link :to="{name: 'testMange'}">
-              <i class="side_icon icon-calendar"></i>
-            </router-link>
+            <el-tooltip class="item" effect="dark" content="考勤管理" placement="right">
+              <router-link :to="{name: 'testMange'}">
+                <i class="side_icon icon-calendar"></i>
+              </router-link>
+            </el-tooltip>
           </li>
           <li>
-            <router-link :to="{name: 'Access'}">
-              <i class="side_icon icon-access"></i>
-            </router-link>
+            <el-tooltip class="item" effect="dark" content="出入记录" placement="right">
+              <router-link :to="{name: 'Access'}">
+                <i class="side_icon icon-access"></i>
+              </router-link>
+            </el-tooltip>
           </li>
           <li v-if="showAdmin">
-            <router-link :to="{name: 'rightAdmin'}">
-              <i class="side_icon icon-admin"></i>
-            </router-link>
+            <el-tooltip class="item" effect="dark" content="管理员" placement="right">
+              <router-link :to="{name: 'rightAdmin'}">
+                <i class="side_icon icon-admin"></i>
+              </router-link>
+            </el-tooltip>
           </li>
         </ul>
       </el-aside>
@@ -105,9 +115,9 @@ export default {
       border-right: 1px solid #e6e7e9;
       .menu {
         text-align: center;
-        width: 70px;
-        height: 70px;
-        line-height: 70px;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
         box-sizing: border-box;
         border-bottom: solid 1px #e6e7e9;
         img {
@@ -120,8 +130,8 @@ export default {
         li {
           a {
             position: relative;
-            width: 70px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -183,8 +193,8 @@ export default {
     }
     .top_header {
       display: flex;
-      height:70px!important;
-      line-height: 70px;
+      height:100px!important;
+      line-height: 100px;
       background-color: #fff;
       border-bottom: 1px solid #e6e7e9;
       .tip {
@@ -203,38 +213,21 @@ export default {
       }
       .info {
         display: flex;
-        margin-right: 30px;
+        margin-right: 105px;
         span {
           color: #003391;
+          font-size: 16px;
         }
         .tempPic {
-          width: 40px;
-          height: 40px;
+          width: 70px;
+          height: 70px;
           border-radius: 50%;
-          margin-top: 12px;
+          margin-top: 20px;
           margin-right: 7px;
           overflow: hidden;
           img {
             width: 100%;
             height: 100%;
-          }
-        }
-        .logout {
-          margin-right: 12px;
-          width: 35px;
-          position: relative;
-          font-size: 15px;
-          span {
-            padding: 6px 13px;
-          }
-          ul {
-            list-style: none;
-            position: absolute;
-            left: 4px;
-            top: 21px;
-            li {
-              cursor: pointer;
-            }
           }
         }
       }
@@ -249,7 +242,11 @@ export default {
 }
 .el-main {
   overflow: auto;
+      padding: 50px 150px 0px 50px !important;
 }
+.el-popper {
+    margin-top: 20px !important;
+  }
 </style>
 
 

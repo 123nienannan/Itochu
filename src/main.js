@@ -14,10 +14,6 @@ Vue.use(ElementUI)
 // Vue.prototype.$http= axios
 Vue.config.productionTip = false
 
-//定义一个全局过滤器实现日期格式化
-// Vue.filter('datafmt',function (input,fmtstring) {
-//   return moment(input).format(fmtstring);
-// })
 
 /* eslint-disable no-new */
 new Vue({

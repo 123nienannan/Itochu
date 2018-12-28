@@ -12,7 +12,7 @@ export default {
       searchText: '',
       company: [],
       department: [],
-      pageSize:8,
+      pageSize:10,
       curPage: 1,
       totalPage: 0,
       pictures: [
@@ -91,6 +91,9 @@ export default {
        this.companyValId = res.data.data.companyId
        this.editSpecialUserForm.companyName = res.data.data.companyName
       }
+    },
+    companyChange() {
+      this.companyValId = this.companyVal
     },
      //列表页面里修改头像
      amendUploadPic (e,id) {

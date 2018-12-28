@@ -6,7 +6,7 @@ export default {
     return {
       attendanceDate: '',
       curPage:1,
-      pageSize:3,
+      pageSize:10,
       totalPage:0,
       attendanceList:[]
     }

@@ -5,6 +5,7 @@ import router from "../router"
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials = true
 axios.interceptors.request.use(config => {
+
   return config
 })
 axios.interceptors.response.use(function (res) {
@@ -38,22 +39,20 @@ const fetch = (opts, data) => {
   let promise = new Promise(function (resolve, reject) {
     axios(httpDefaultOpts).then(
       (res) => {
-        console.log(res)
+        if(res.data.errcode == -1) {
+          router.push({name:"Login"})
+          Message({
+            type: "error",
+            message: res.data.message
+          })
+        }
         if (res.data.success) {
           resolve(res)
         } else {
           Message({
             type: "error",
-            message: res.data.data.message
+            message: res.data.message
           })
-          // switch(res.data.errcode){
-          //   case -1:
-          //     router.push({name:"Login"})
-          //     break;
-          //   default:
-          //     router.push({name:"Login"})
-          //     break;
-          // }
         }
       }
     ).catch(
