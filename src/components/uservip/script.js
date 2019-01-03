@@ -15,6 +15,7 @@ export default {
       pageSize:10,
       curPage: 1,
       totalPage: 0,
+      showPass:false,
       pictures: [
         {
           picId: "1",
@@ -28,7 +29,9 @@ export default {
       checkedPicture: false,
       checkedamendPicture:false,
       headerPic: '',
-      editheaderPic: "",
+      pic: {
+        editheaderPic: "",
+      },
       addSpUserData: [],
       addSpecialNeedCondition: {
         companyId:'',
@@ -66,7 +69,7 @@ export default {
         ],
         departmentName: [
           { required: true, message: '请选择部门', trigger: 'blur' },
-        ],
+        ]
       },
       picValue: '',
       listPicVal: '',
@@ -74,11 +77,13 @@ export default {
       edituploadVal: ''
     }
   },
+  created() {
+    this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
+  },
   mounted () {
     this.getadminType()
     this.getCompanyList()
     this.getAparmentList()
-    this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
     async getadminType() {
@@ -130,7 +135,7 @@ export default {
     },
     async postImage (data) {
       let res = await fetch({url: uploadBase64ByPersonId, method: 'post'}, {file: data, personId:this.uploadNeedId})
-      this.getAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     //员工审核
     async operation (personId,auditStatus) {
@@ -171,7 +176,9 @@ export default {
     },
     async editPostImg (data) {
       let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
-      this.editheaderPic = res.data.data
+      // this.showPass = true
+      this.pic.editheaderPic = res.data.data
+      this.addSpecialNeedCondition.photoUrl = res.data.data
     },
 
     //点击添加按钮里面的上传图片所需要的方法
@@ -331,11 +338,48 @@ export default {
     departmentChangeAmend () {
       this.addSpecialNeedCondition.departmentId = this.editSpecialUserForm.departmentName
     },
+    checkEmail(email) {
+      let reg = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
+      if (reg.test(email)) {
+        return true
+      } else {
+        return false
+      }
+    },
+    checkPhone(phone) {
+      let reg = /(^1[3-9]\d{9}$)|(^09\d{8}$)/
+      if (reg.test(phone)) {
+        return true
+      } else {
+        return false
+      }
+    },
     //点击添加按钮
     addSpecialPerson () {
       this.addSpecialNeedCondition.photoUrl = this.headerPic
       if(this.addSpecialNeedCondition.photoUrl == "") {
         this.checkedPicture = true
+        return false
+      }
+      if(this.addSpecialUserForm.companyMail !=""  && !this.checkEmail(this.addSpecialUserForm.companyMail)){
+        this.$message({
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return false
+      }
+      if(this.addSpecialUserForm.personalMail != "" && !this.checkEmail(this.addSpecialUserForm.personalMail)){
+        this.$message({
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return false
+      }
+      if(this.addSpecialUserForm.phone !="" && !this.checkPhone(this.addSpecialUserForm.phone)){
+        this.$message({
+          message: '手机号码格式不正确',
+          type: 'warning'
+        });
         return false
       }
       this.$refs.addSpecialUserForm.validate((valid) => {
@@ -350,7 +394,7 @@ export default {
             window.location.reload()
           })
         } else {
-          return false;
+          return false
         }
       });
     },
@@ -367,16 +411,47 @@ export default {
       this.editSpecialUserForm.departmentName = data.departmentName
       this.editSpecialUserForm.personalMail = data.personalMail
       this.addSpecialNeedCondition.photoUrl = data.photoUrl
-      this.editheaderPic = data.photoUrl
+      this.pic.editheaderPic = data.photoUrl
       this.addSpecialNeedCondition.companyId = data.companyId
       this.addSpecialNeedCondition.departmentId = data.departmentId
       this.addSpecialNeedCondition.personId = data.personId
+      if(data.photoUrl) {
+        this.showPass = true
+      }
     },
     editSpecialPerson () {
-      fetch({method:'post',url:updateSpecialPerson},{...this.editSpecialUserForm, ...this.addSpecialNeedCondition}).then(res => {
-        this.editInfo = false
-        this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
-      })
+      if(this.editSpecialUserForm.companyMail !='' && !this.checkEmail(this.editSpecialUserForm.companyMail)){
+        this.$message({
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return false
+      }
+      if(this.editSpecialUserForm.personalMail !='' && !this.checkEmail(this.editSpecialUserForm.personalMail)){
+        this.$message({
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return false
+      }
+      if(this.editSpecialUserForm.phone !='' && !this.checkPhone(this.editSpecialUserForm.phone)){
+        this.$message({
+          message: '手机号码格式不正确',
+          type: 'warning'
+        });
+        return false
+      }
+      this.$refs.editSpecialUserForm.validate((valid) => {
+        if (valid) {
+          fetch({method:'post',url:updateSpecialPerson},{...this.editSpecialUserForm, ...this.addSpecialNeedCondition, ...this.pic}).then(res => {
+            this.editInfo = false
+            this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
+            // window.location.reload()
+          })
+        } else {
+          return false
+        }
+      });
     },
     //点击删除按钮，删除某条特殊人员
     deleteSpecialUser (id) {
@@ -438,6 +513,15 @@ export default {
       this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
 
+    addhandleClose (done) {
+      this.$confirm('确认关闭？')
+      .then(_ => {
+        done()
+        this.$refs.addSpecialUserForm.resetFields()
+        this.checkedPicture = false
+      })
+      .catch(_ => {})
+    },
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {

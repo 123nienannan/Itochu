@@ -11,7 +11,7 @@ export default {
       accessList: []
     }
   },
-  mounted() {
+  created() {
     this.getAllAccessList(this.curPage, this.pageSize, this.accessDate)
   },
   methods: {

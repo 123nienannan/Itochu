@@ -11,7 +11,7 @@ export default {
       attendanceList:[]
     }
   },
-  mounted () {
+  created () {
     this.getAllAttendanceList(this.curPage,this.pageSize,this.attendanceDate)
   },
   methods: {

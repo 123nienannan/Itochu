@@ -3,10 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import "babel-polyfill"
 // import axios from 'axios'
 import ElementUI from 'element-ui'
 import '@/assets/css/reset.css'
 import 'element-ui/lib/theme-chalk/index.css'
+import VueWechatTitle from 'vue-wechat-title'
+
+Vue.use(VueWechatTitle)
 
 // axios.defaults.baseURL="http://192.168.0.108:8097"
 Vue.use(ElementUI)

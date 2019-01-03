@@ -1,4 +1,4 @@
-const baseUrl="https://twc.digirogar.com/itochuweb"
+const baseUrl="https://aiface.itochu-intra.com.cn/itochuweb"
 // const baseUrl="/itochuweb"      //根api
 const getCompanyList=baseUrl+"/getAllCompany"   //获取全部公司
 const login=baseUrl+"/user/login"  //登录接口

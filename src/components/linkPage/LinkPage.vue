@@ -1,6 +1,7 @@
 <template>
 <div class="link_main">
   <div class="wapper_link">
+    <div class="saveWaterPic"></div>
   <div class="link_top">
     <p>信息采集</p>
   </div>
@@ -17,14 +18,14 @@
   <div class="link_button">
     <span>
        上传头像
-       <input @change="uploadPicture" type="file">
+       <input @change="uploadPicture" accept="image/*" type="file">
     </span>
   </div>
   <div class="link_tip">
     请上传正面未经PS照片
   </div>
   <div class="link_btn">
-    <span @click="confirm">确定</span>
+    <span @click="confirm">完成</span>
   </div>
 </div>
 </div>
@@ -222,6 +223,7 @@ display: none;/*隐藏滚轮*/
   width:100vw;
   height:100vh;
   .wapper_link {
+    position: relative;
     box-sizing: border-box;
     padding: 0 45px;
     width: 100%;
@@ -230,6 +232,15 @@ display: none;/*隐藏滚轮*/
     min-width: 320px;
     max-width: 750px;
     margin: 0 auto;
+    .saveWaterPic {
+      position: absolute;
+      right: 0;
+      top: 40px;
+      width: 40%;
+      height: 200px;
+      background: url("../../assets/images/water.png") no-repeat;
+      background-size: 100%;
+    }
     .link_top {
       box-sizing: border-box;
       width: 100%;
@@ -243,7 +254,7 @@ display: none;/*隐藏滚轮*/
       }
     }
     .link_content {
-      background: url("../../assets/images/background_logo.png") no-repeat center center;
+      background: url("../../assets/images/represent.png") no-repeat center center;
       margin: 0 auto;
       margin-top: 60px;
       border-radius: 50%;

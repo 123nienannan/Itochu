@@ -1,6 +1,3 @@
-.special {
-  margin-left: -48px;
-}
 .el-form--label-top .el-form-item__label {
   padding: 0 0 5px;
 }
@@ -17,9 +14,6 @@
   padding: 0;
   background-color: #fff;
   border-radius: 50%;
-}
-.el-popover el-popper {
-  left: 258px !important;
 }
 .user_list {
   .el-input__inner {
@@ -54,18 +48,59 @@
         box-shadow: 0px 8px 20px 4px
           rgba(86, 97, 129, 0.08);
         border-radius: 20px;
-        font-size: 14px;
+        font-size: 16px;
+        i {
+          font-size: 20px;
+        }
       }
   }
   .table {
+    border-radius: 10px;
+    overflow: hidden;
     margin-top: 25px;
     .footer {
-      height: 60px;
       background-color: #fff;
+      padding-top: 20px;
+      height: 40px;
+      .bulk {
+        padding-left: 51px;
+        float: left;
+      }
       .paginator {
         float: right;
-        margin-top: 20px;
+
       }
+    }
+    tbody {
+      tr {
+        height: 61px;
+      }
+    }
+    .has-gutter {
+      th:first-child {
+        border-right:3px solid #f6f6f7;
+      }
+    }
+    .el-table__fixed-header-wrapper {
+      tr {
+        th:first-child {
+          border-right:3px solid #f6f6f7;
+        }
+        th:last-child {
+          border-left:3px solid #f6f6f7;
+        }
+      }
+    }
+    tr{
+      td:first-child {
+        border-right:3px solid #f6f6f7;
+      }
+      td:last-child {
+        border-left:3px solid #f6f6f7;
+      }
+    }
+    .el-table td {
+      padding: 3px 0;
     }
   }
   .edit_table {
@@ -107,16 +142,17 @@
   }
   .checkPic {
     position: relative;
-    width: 50px;
-    height: 50px;
+    top: 3px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     color: #fff;
     overflow: hidden;
     display: inline-block;
   }
   .clickChecked {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     display: inline-block;
   }
   .clickChecked::before {
@@ -126,14 +162,14 @@
     background-color: #ffd34b;
     border-radius: 50%;
     position: absolute;
-    top:33px;
+    top:22px;
     left: 25px;
   }
   .checkPic::after {
     content: "点 击 审 核";
     word-wrap: break-word;
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     overflow: hidden;
     background-color:rgba(121, 134, 176, 0.8);
@@ -142,30 +178,32 @@
     left: 0;
   }
   .checkPicStatus {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     color: #fff;
     overflow: hidden;
     display: inline-block;
     position: relative;
+    top: 3px;
   }
   .checkPicaudit {
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     color: #fff;
     overflow: hidden;
     display: inline-block;
+    top: 3px;
   }
   .checkPicaudit::after {
     content: "已 驳 回";
     letter-spacing: -1px;
     word-wrap: break-word;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
     border-radius: 50%;
     overflow: hidden;
     background-color:rgba(121, 134, 176, 0.8);
@@ -176,55 +214,60 @@
 }
 .popover_box {
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   .pic-box{
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
+    width: 150px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom:15px;
-    box-shadow:2px 2px 6px rgba(0,0,0,.2);
+    background-color: #f5f6f7;
     img{
       width: 100%;
-    }
-  }
-  button{
-    position: relative;
-    margin-bottom:10px;
-    width: 140px;
-    height: 36px;
-    box-shadow: 0px 8px 20px 4px
-    rgba(86, 97, 129, 0.08);
-    input {
-      width: 100%;
       height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
     }
   }
-  .tip{
-    font-size:14px;
-    color:#666;
-    button {
-      font-size: 16px;
-      padding: 0;
-      width: 70px;
-      height: 36px;
-      box-shadow: 0px 8px 20px 4px
-        rgba(86, 97, 129, 0.08);
-      border-radius: 18px;
-      &.tip_turndown {
-        margin-right: 10px;
-        width: auto;
-        height: auto;
-        color: #4c83ff;
-        border: 0;
+
+  .sepreate {
+    .checkPicdiv {
+      padding-left: 25px;
+      .tip{
+        button {
+          display: block;
+          font-size: 16px;
+          padding: 0;
+          margin-left:0;
+          width: 110px;
+          height: 30px;
+          box-shadow: 0px 8px 20px 4px
+            rgba(86, 97, 129, 0.08);
+          border-radius: 18px;
+          &.tip_turndown {
+            margin-top: 10px;
+            color: #4c83ff;
+            border: 0;
+          }
+        }
+      }
+      .butt{
+        position: relative;
+        margin-bottom:10px;
+        width: 140px;
+        height: 36px;
+        font-size: 14px;
+        input {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          opacity: 0;
+        }
+      }
+      .tipPic {
+        font-size: 14px;
+        color: #8c94ac;
       }
     }
   }

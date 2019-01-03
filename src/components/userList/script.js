@@ -15,6 +15,7 @@ export default {
       pageSize:10,
       curPage: 1,
       totalPage: 0,
+      showBulkUpload: true,
       pictures: [
         {
           picId: "1",
@@ -39,11 +40,13 @@ export default {
 
     }
   },
+  created() {
+    this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
+  },
   mounted () {
     this.getadminType()
     this.getCompanyList()
     this.getAparmentList()
-    this.getAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
   },
   methods: {
     //员工审核
@@ -53,6 +56,7 @@ export default {
     if(this.type != 1) {
       this.companyVal = res.data.data.companyName
       this.companyValId = res.data.data.companyId
+      this.showBulkUpload = false
      }
   },
     companyChange() {
@@ -231,6 +235,7 @@ export default {
         message: '发送链接成功',
         type: 'success'
       });
+      // this.$router.push({name: 'LinkPage'})
     },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {

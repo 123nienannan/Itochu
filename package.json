@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.11",
     "exif-js": "^2.3.0",
     "moment": "^2.23.0",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-wechat-title": "^2.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -54,7 +56,8 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "webpack-server": "^0.1.2"
   },
   "engines": {
     "node": ">= 6.0.0",

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-container class="main">
-      <el-aside class="aside" width="100px">
+      <el-aside class="aside" width="100px" style="overflow: hidden;">
         <div class="menu">
           <img src="@/assets/images/menu.png">
         </div>
@@ -55,9 +55,9 @@
                   <span class="el-dropdown-link">你好
                     {{loginName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>退出</el-dropdown-item>
-                  </el-dropdown-menu>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>退出</el-dropdown-item>
+                    </el-dropdown-menu>
                </el-dropdown>
            </div>
         </el-header>
@@ -86,7 +86,6 @@ export default {
   methods: {
     async getType() {
       const res = await fetch({ method: "get", url: getAdminType })
-      console.log(res);
       this.loginName = res.data.data.userName;
       if (res.data.data.type == 1) {
         this.showAdmin = true
@@ -96,7 +95,6 @@ export default {
     },
     async handleCommand() {
       const res = await fetch({ method: "post", url: loginOut })
-      localStorage.removeItem('token')
       this.$router.push({ name: "Login" })
     }
   }
@@ -116,8 +114,8 @@ export default {
       .menu {
         text-align: center;
         width: 100px;
-        height: 100px;
-        line-height: 100px;
+        height: 80px;
+        line-height: 80px;
         box-sizing: border-box;
         border-bottom: solid 1px #e6e7e9;
         img {
@@ -193,8 +191,8 @@ export default {
     }
     .top_header {
       display: flex;
-      height:100px!important;
-      line-height: 100px;
+      height:80px!important;
+      line-height: 80px;
       background-color: #fff;
       border-bottom: 1px solid #e6e7e9;
       .tip {
@@ -222,7 +220,7 @@ export default {
           width: 70px;
           height: 70px;
           border-radius: 50%;
-          margin-top: 20px;
+          margin-top: 5px;
           margin-right: 7px;
           overflow: hidden;
           img {
@@ -242,12 +240,14 @@ export default {
 }
 .el-main {
   overflow: auto;
-      padding: 50px 150px 0px 50px !important;
+      padding: 25px 150px 0px 50px !important;
 }
-.el-popper {
-    margin-top: 20px !important;
+ul.el-popper {
+    margin-top: 25px !important;
+    padding: 5px 0;
   }
 </style>
+
 
 
 

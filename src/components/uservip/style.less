@@ -18,9 +18,7 @@
   background-color: #fff;
   border-radius: 50%;
 }
-.el-popover el-popper {
-  left: 258px !important;
-}
+
 .uservip_list {
   .el-input__inner {
     outline: none;
@@ -59,6 +57,8 @@
       }
   }
   .table {
+    border-radius: 10px;
+    overflow: hidden;
     margin-top: 25px;
     .footer {
       height: 60px;
@@ -71,11 +71,59 @@
     .address {
       width: 100%;
     }
+    tbody {
+      tr {
+        height: 61px;
+      }
+    }
+    .has-gutter {
+      th:first-child {
+        border-right:3px solid #f6f6f7;
+      }
+    }
+    .el-table__fixed-header-wrapper {
+      tr {
+        th:first-child {
+          border-right:3px solid #f6f6f7;
+        }
+        th:last-child {
+          border-left:3px solid #f6f6f7;
+        }
+      }
+    }
+    tr{
+      td:first-child {
+        border-right:3px solid #f6f6f7;
+      }
+      td:last-child {
+        border-left:3px solid #f6f6f7;
+      }
+    }
+    .el-dialog__title {
+      color: #333;
+      font-size: 28px;
+    }
+    .el-table td {
+      padding: 3px 0;
+    }
   }
   .edit_table {
     display: flex;
     flex-direction: row;
     align-items: center;
+    .passMark {
+      position: relative;
+      .div {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        right: 36px;
+        bottom: 4px;
+        img {
+          width: 100%;
+        }
+      }
+    }
     .img-wrap {
       background: url("../../assets/images/background_logo.png") no-repeat center center;
       width: 100px;
@@ -94,13 +142,15 @@
     .btn-wrap {
       position: relative;
       .btn-upload {
-        width: 100px;
-        height: 32px;
+        width: 130px;
+        height: 40px;
         border:none;
         background-color: #4c83ff;
         border-radius:16px;
         position: relative;
-        font-size: 12px;
+        font-size: 16px;
+        border-radius: 23px;
+      	border: solid 1px #e6e7e9;
         color:#fff;
         margin-bottom:10px;
       }
@@ -124,124 +174,64 @@
     color: #4f86ff;
   }
   .checkPic {
+    top: 3px;
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     color: #fff;
     overflow: hidden;
     display: inline-block;
   }
-  .clickChecked{
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-  }
-  // .clickChecked::before {
-  //   content: '';
-  //   width: 8px;
-  //   height: 8px;
-  //   background-color: #ffd34b;
-  //   border-radius: 50%;
-  //   position: absolute;
-  //   top:33px;
-  //   left: 25px;
-  // }
-  // .checkPic::after {
-  //   content: "点 击 审 核";
-  //   word-wrap: break-word;
-  //   width: 50px;
-  //   height: 50px;
-  //   border-radius: 50%;
-  //   overflow: hidden;
-  //   background-color:rgba(121, 134, 176, 0.8);
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  // }
   .checkPicStatus {
-    width: 50px;
-    height: 50px;
+    top: 3px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     color: #fff;
     overflow: hidden;
     display: inline-block;
     position: relative;
   }
-  .checkPicaudit {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    color: #fff;
-    overflow: hidden;
-    display: inline-block;
-  }
-  // .checkPicaudit::after {
-  //   content: "已 驳 回";
-  //   word-wrap: break-word;
-  //   width: 50px;
-  //   height: 50px;
-  //   border-radius: 50%;
-  //   overflow: hidden;
-  //   background-color:rgba(121, 134, 176, 0.8);
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  // }
 }
 .popover_box {
   display: flex;
-  flex-direction: column;
   align-items: center;
   .pic-box{
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
+    width: 150px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom:15px;
-    box-shadow:2px 2px 6px rgba(0,0,0,.2);
+    background-color: #f5f6f7;
     img{
       width: 100%;
-    }
-  }
-  button{
-    position: relative;
-    margin-bottom:10px;
-    width: 140px;
-    height: 36px;
-    box-shadow: 0px 8px 20px 4px
-    rgba(86, 97, 129, 0.08);
-    input {
-      width: 100%;
       height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
     }
   }
-  .tip{
-    font-size:14px;
-    color:#666;
-    button {
-      font-size: 16px;
-      padding: 0;
-      width: 70px;
-      height: 36px;
-      box-shadow: 0px 8px 20px 4px
-        rgba(86, 97, 129, 0.08);
-      border-radius: 18px;
-      &.tip_turndown {
-        margin-right: 10px;
-        width: auto;
-        height: auto;
-        color: #4c83ff;
-        border: 0;
+  .sepreate {
+    .checkPicdiv {
+      padding-left: 25px;
+    }
+    .butt{
+      position: relative;
+      margin-bottom:10px;
+      width: 140px;
+      height: 30px;
+      font-size: 14px;
+      input {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
       }
     }
+    .tipPic {
+      font-size: 14px;
+      color: #8c94ac;
+    }
   }
+
 }

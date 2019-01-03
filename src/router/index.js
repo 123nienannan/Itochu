@@ -29,7 +29,10 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        title: '登录'
+     }
     },
     {
       path: '/main',
@@ -39,34 +42,52 @@ const router = new Router({
         {
           path: '/users',
           component: UserList,
-          name: 'UserList'
+          name: 'UserList',
+          meta: {
+            title: '人员管理'
+         }
         },
         {
           path: '/usersVip',
           component: userVipList,
-          name: 'userVipList'
+          name: 'userVipList',
+          meta: {
+            title: '特殊人员'
+         }
         },
         {
           path: '/mangement',
           component: testMange,
-          name: 'testMange'
+          name: 'testMange',
+          meta: {
+            title: '考勤管理'
+         }
         },
         {
           path: '/access',
           component: Access,
-          name: 'Access'
+          name: 'Access',
+          meta: {
+            title: '出入记录'
+         }
         },
         {
           path: '/right',
           component: rightAdmin,
-          name: 'rightAdmin'
+          name: 'rightAdmin',
+          meta: {
+            title: '管理员'
+         }
         }
       ]
     },
     {
       path: '/linkPage',
       name: 'LinkPage',
-      component: LinkPage
+      component: LinkPage,
+      meta: {
+        title: '伊藤忠'
+     }
     }
   ]
 })

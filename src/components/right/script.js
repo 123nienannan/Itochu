@@ -65,11 +65,13 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
         ],
-      }
+      },
     }
   },
-    mounted() {
+    created() {
       this.getAdminList(this.curPage,this.pageSize)
+    },
+    mounted() {
       this.getAllCompany()
     },
     methods: {
@@ -144,10 +146,16 @@ export default {
       this.companys = data
     },
     amendAdminUser () {
-      fetch({method:'post',url:updateAdmin},{...this.amendNeedCondition,  ...this.amendAdminForm}).then(res => {
-        this.showAmendDialog = false
-        this.getAdminList(this.curPage,this.pageSize)
-      })
+      this.$refs.amendAdminForm.validate((valid) => {
+        if (valid) {
+          fetch({method:'post',url:updateAdmin},{...this.amendNeedCondition,  ...this.amendAdminForm}).then(res => {
+            this.showAmendDialog = false
+            this.getAdminList(this.curPage,this.pageSize)
+          })
+        } else {
+          return false
+        }
+      });
     },
     async getAdminList (pageNum,pageSize) {
       const params = {
@@ -163,6 +171,14 @@ export default {
     getCurPage (curPage) {
       this.curPage = curPage
       this.getAdminList(this.curPage,this.pageSize)
+    },
+    addhandleClose (done) {
+      this.$confirm('确认关闭？')
+      .then(_ => {
+        done()
+        this.$refs.addAdminForm.resetFields()
+      })
+      .catch(_ => {});
     },
     handleClose(done) {
       this.$confirm('确认关闭？')

@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import fetch from "@/utils/fetch";
-import { login } from "@/utils/api";
+import fetch from "@/utils/fetch"
+import { login } from "@/utils/api"
 export default {
   data() {
     return {
@@ -47,13 +47,13 @@ export default {
         if (valid) {
           fetch({ method: "post", url: login }, this.loginForm ).then(
             res => {
-              res.data.data.token = "token"
-              localStorage.setItem('token', res.data.data.token)
+              // res.data.data.token = "token"
+              // localStorage.setItem('token', res.data.data.token)
               this.$router.push({ name: "UserList" })
             }
           );
         } else {
-          return false;
+          return false
         }
       });
     }

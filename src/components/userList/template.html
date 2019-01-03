@@ -48,8 +48,9 @@
               class="upload-demo"
               name="excelFile"
               :multiple="false"
+              v-if="showBulkUpload"
               action="/itochuweb/importPersonExcel">
-              <el-button class="import" size="small" icon="el-icon-upload" type="primary">批量上传</el-button>
+              <el-button class="import" size="small" icon="el-icon-upload2" type="primary">批量上传</el-button>
             </el-upload>
           </el-col>
       </el-row>
@@ -63,8 +64,9 @@
       style="width: 100%">
       <el-table-column
       fixed
+      align="center"
       type="selection"
-      width="40">
+      width="60">
       <template slot-scope="scope">
           <el-checkbox v-model="scope.row.checked" @change="changePassOrReject(scope.row)"  v-if='scope.row.auditStatus==1'></el-checkbox>
       </template>
@@ -85,26 +87,35 @@
                   <div class="pic-box">
                     <img class="pic" :src="scope.row.distinguishImgUrl"/>
                   </div>
-                  <div class="checkPic" v-if="scope.row.auditStatus==1">
-                    <p class="tip">
-                      <el-button class="tip_turndown" @click="operation(scope.row.personId, '3')">驳回</el-button>
-                      <el-button type="primary" @click="operation(scope.row.personId, '2')">同意</el-button>
-                    </p>
+                  <div class="sepreate">
+                    <div class="checkPicdiv" v-if="scope.row.auditStatus==1">
+                      <p class="tip">
+                        <el-button type="primary" @click="operation(scope.row.personId, '2')">同意</el-button>
+                        <el-button class="tip_turndown" @click="operation(scope.row.personId, '3')">驳回</el-button>
+                      </p>
+                    </div>
+                    <div class="checkPicdiv " v-if="scope.row.auditStatus==2">
+                        <el-button class="butt" type="primary" size="mini" round>
+                          修改头像
+                          <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
+                        </el-button>
+                          <p class="tipPic">请上传正面未经ps照片</p>
+                    </div>
+                    <div class="checkPicdiv" v-if="scope.row.auditStatus==3">
+                        <el-button class="butt" type="primary" size="mini" round>
+                          修改头像
+                          <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
+                        </el-button>
+                          <p class="tipPic">请上传正面未经ps照片</p>
+                    </div>
+                    <div class="checkPicdiv" v-if="scope.row.auditStatus==4">
+                        <el-button class="butt" type="primary" size="mini" round>
+                          修改头像
+                          <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
+                        </el-button>
+                          <p class="tipPic">请上传正面未经ps照片</p>
+                    </div>
                   </div>
-                  <div class="checkPic" v-if="scope.row.auditStatus==2">
-                      <el-button type="primary" size="mini" round>
-                        修改头像
-                        <input type="file" @change="amendUploadPic($event,scope.row.personId)">
-                      </el-button>
-                        <p class="tip">请上传正面未经ps照片</p>
-                    </div>
-                  <div class="checkPic" v-if="scope.row.auditStatus==3">
-                      <el-button type="primary" size="mini" round>
-                        修改头像
-                        <input type="file" @change="amendUploadPic($event,scope.row.personId)">
-                      </el-button>
-                        <p class="tip">请上传正面未经ps照片</p>
-                    </div>
                 </div>
 
                   <div class="clickChecked" slot="reference" v-if="scope.row.auditStatus==1">
@@ -115,6 +126,9 @@
                   </div>
                   <div class="reject" slot="reference" v-if="scope.row.auditStatus==3">
                       <div class="checkPicaudit"><img style="width:100%;" :src="scope.row.distinguishImgUrl"/></div>
+                  </div>
+                  <div slot="reference" v-if="scope.row.auditStatus==4">
+                      <div class="checkPicStatus"><img style="width:100%;" src=""/></div>
                   </div>
               </el-popover>
         </template>
@@ -129,17 +143,17 @@
         prop="departmentName"
         label="部门"
         align="center"
-        width="200">
+        width="180">
       </el-table-column>
       <el-table-column
         prop="phone"
         label="手机号"
         align="center"
-        width="200">
+        width="160">
       </el-table-column>
       <el-table-column
         prop="staffNumber"
-        width="120"
+        width="100"
         align="center"
         label="工号">
       </el-table-column>
@@ -156,6 +170,7 @@
       <el-table-column
         prop="companyName"
         align="center"
+        width="300"
         label="考勤地点">
       </el-table-column>
       <el-table-column
@@ -171,7 +186,7 @@
 
      <div class="footer">
           <!-- 通过驳回按钮 -->
-        <div style="margin-top: 20px; float: left; padding-left: 40px;">
+        <div class="bulk">
           <el-button size="mini" @click="bulkPass">审批通过</el-button>
           <el-button size="mini" @click="bulkReject">审批驳回</el-button>
         </div>

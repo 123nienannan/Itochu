@@ -3,7 +3,7 @@
   <div class="userlistvip_top">
       <el-row>
           <el-col :span="5">
-              <el-select class="select" @change="companyChange"  :disabled="type!=1" v-model="companyVal" placeholder="选择公司">
+              <el-select class="select" @change="companyChange" :clearable="true" :disabled="type!=1" v-model="companyVal" placeholder="选择公司">
                   <el-option
                     v-for="item in company"
                     :key="item.companyId"
@@ -14,7 +14,7 @@
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select" v-model="departmentVal" placeholder="选择部门">
+              <el-select class="select" v-model="departmentVal" :clearable="true" placeholder="选择部门">
                   <el-option
                       v-for="item in department"
                       :key="item.departMentId"
@@ -25,7 +25,7 @@
               </el-select>
           </el-col>
           <el-col :span="5">
-              <el-select class="select uploadPic" v-model="uploadpicVal" placeholder="选择照片">
+              <el-select class="select uploadPic" :clearable="true" v-model="uploadpicVal" placeholder="选择照片">
                   <el-option
                       v-for="item in pictures"
                       :key="item.picId"
@@ -62,11 +62,11 @@
       align="center"
       type="index"
       label="编号"
-      width="50">
+      width="80">
       </el-table-column>
       <el-table-column
         align="center"
-        width="110"
+        width="100"
         label="照片">
         <template slot-scope="scope">
             <el-popover trigger="hover" placement="right" style="left: 249px;">
@@ -74,36 +74,18 @@
                   <div class="pic-box">
                     <img class="pic" :src="scope.row.displayImgUrl"/>
                   </div>
-                  <div class="checkPic" v-if="scope.row.auditStatus==1">
-                    <p class="tip">
-                      <el-button class="tip_turndown" @click="operation(scope.row.personId, '3')">驳回</el-button>
-                      <el-button type="primary" @click="operation(scope.row.personId, '2')">同意</el-button>
-                    </p>
-                  </div>
-                  <div class="checkPic" v-if="scope.row.auditStatus==2">
-                      <el-button type="primary" size="mini" round>
+                <div class="sepreate">
+                  <div class="checkPicdiv" v-if="scope.row.auditStatus==2">
+                      <el-button class="butt" type="primary" size="mini" round>
                         修改头像
-                        <input type="file" @change="amendUploadPic($event,scope.row.personId)">
+                        <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
                       </el-button>
-                        <p class="tip">请上传正面未经ps照片</p>
-                    </div>
-                  <div class="checkPic" v-if="scope.row.auditStatus==3">
-                      <el-button type="primary" size="mini" round>
-                        修改头像
-                        <input type="file" @change="amendUploadPic($event,scope.row.personId)">
-                      </el-button>
-                        <p class="tip">请上传正面未经ps照片</p>
+                        <p class="tipPic">请上传正面未经ps照片</p>
                     </div>
                 </div>
-
-                <div class="clickChecked" slot="reference" v-if="scope.row.auditStatus==1">
-                    <div class="checkPic"><img style="width:100%;" :src="scope.row.displayImgUrl"/></div>
-                  </div>
-                  <div slot="reference" v-if="scope.row.auditStatus==2">
+              </div>
+                  <div slot="reference">
                       <div class="checkPicStatus"><img style="width:100%;" :src="scope.row.displayImgUrl"/></div>
-                  </div>
-                  <div class="reject" slot="reference" v-if="scope.row.auditStatus==3">
-                      <div class="checkPicaudit"><img style="width:100%;" :src="scope.row.displayImgUrl"/></div>
                   </div>
               </el-popover>
         </template>
@@ -116,6 +98,8 @@
       </el-table-column>
       <el-table-column
         prop="departmentName"
+        width="120"
+        align="center"
         label="部门">
       </el-table-column>
       <el-table-column
@@ -161,7 +145,7 @@
       title="添加人员"
       :visible.sync="showaddSpUserDialog"
       width="30%"
-      :before-close="handleClose">
+      :before-close="addhandleClose">
       <div class="edit_table">
         <div class="img-wrap">
           <img :src="headerPic">
@@ -169,7 +153,7 @@
         <div class="btn-wrap">
           <button class="btn-upload">
             上传头像
-            <input type="file" @change="uploadFile" class="upload">
+            <input type="file" accept="image/*" @change="uploadFile" class="upload">
           </button>
           <p class="tip">请上传正脸照用于人脸识别</p>
           <p class="checkedPic" style="color: #f56c6c;" v-if="checkedPicture">请上传头像</p>
@@ -261,13 +245,16 @@
               width="30%"
               :before-close="handleClose">
               <div class="edit_table">
-                  <div class="img-wrap">
-                    <img :src="editheaderPic">
+                  <div class="passMark">
+                    <div class="img-wrap">
+                      <img :src="pic.editheaderPic">
+                    </div>
+                    <div class="div" v-if="showPass"><img src="../../assets/images/1-4pass.png"></div>
                   </div>
                   <div class="btn-wrap">
                     <button class="btn-upload">
                         更换头像
-                      <input type="file" class="upload" @change="editUploadFile">
+                      <input type="file" accept="image/*" class="upload" @change="editUploadFile">
                     </button>
                     <p class="tip">请上传正面未经PS照片</p>
                     <p class="checkedPic" v-show="checkedamendPicture">更换头像</p>
@@ -282,13 +269,13 @@
                           <el-col :span="12">
                             <el-row>
                               <el-col :span="24">
-                                <el-form-item>
+                                <el-form-item prop="personName">
                                   <h3 class="title">员工姓名</h3>
                                   <el-input v-model="editSpecialUserForm.personName" placeholder="请填写姓名"></el-input>
                                 </el-form-item>
                               </el-col>
                               <el-col :span="24">
-                                  <el-form-item>
+                                  <el-form-item prop="companyName">
                                       <h3 class="title">考勤地点</h3>
                                       <el-select :disabled="type!=1" class="address" @change="locationChangeamend" v-model="editSpecialUserForm.companyName" placeholder="请选择考勤地点">
                                           <el-option
@@ -302,13 +289,13 @@
                                   </el-form-item>
                               </el-col>
                               <el-col :span="24">
-                                <el-form-item>
-                                  <h3 class="title">账号</h3>
+                                <el-form-item prop="phone">
+                                  <h3 class="title">手机号</h3>
                                   <el-input v-model="editSpecialUserForm.phone" placeholder="请填写手机号"></el-input>
                                 </el-form-item>
                               </el-col>
                               <el-col :span="24">
-                                  <el-form-item>
+                                  <el-form-item prop="companyMail">
                                     <h3 class="title">公司邮箱</h3>
                                     <el-input v-model="editSpecialUserForm.companyMail" placeholder="请填写公司邮箱"></el-input>
                                   </el-form-item>
@@ -324,7 +311,7 @@
                                     </el-form-item>
                                   </el-col>
                                   <el-col :span="24">
-                                      <el-form-item>
+                                      <el-form-item prop="departmentName">
                                           <h3 class="title">部门</h3>
                                           <el-select class="address" @change="departmentChangeAmend" v-model="editSpecialUserForm.departmentName" placeholder="请选择部门">
                                               <el-option
@@ -338,7 +325,7 @@
                                       </el-form-item>
                                   </el-col>
                                   <el-col :span="24">
-                                    <el-form-item>
+                                    <el-form-item prop="personalMail">
                                       <h3 class="title">个人邮箱</h3>
                                       <el-input v-model="editSpecialUserForm.personalMail" placeholder="请填写个人邮箱"></el-input>
                                     </el-form-item>
