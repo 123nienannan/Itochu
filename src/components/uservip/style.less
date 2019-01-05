@@ -73,7 +73,7 @@
     }
     tbody {
       tr {
-        height: 61px;
+        // height: 61px;
       }
     }
     .has-gutter {
@@ -142,15 +142,15 @@
     .btn-wrap {
       position: relative;
       .btn-upload {
+        display: inline-block;
         width: 130px;
         height: 40px;
-        border:none;
+        text-align: center;
+        line-height: 40px;
         background-color: #4c83ff;
-        border-radius:16px;
         position: relative;
         font-size: 16px;
-        border-radius: 23px;
-      	border: solid 1px #e6e7e9;
+        border-radius: 20px;
         color:#fff;
         margin-bottom:10px;
       }
@@ -160,10 +160,12 @@
       }
       .upload{
         opacity: 0;
+        filter: alpha(opacity=0);
         position: absolute;
         width:100%;
         height:100%;
         top:0;
+        z-index: 88;
         left:0;
       }
     }
@@ -214,10 +216,16 @@
       padding-left: 25px;
     }
     .butt{
+      display: inline-block;
+      text-align: center;
+      line-height: 36px;
+      border-radius: 18px;
+      background-color: #409EFF;
+      color: #fff;
       position: relative;
       margin-bottom:10px;
       width: 140px;
-      height: 30px;
+      height: 36px;
       font-size: 14px;
       input {
         width: 100%;
@@ -226,6 +234,8 @@
         left: 0;
         top: 0;
         opacity: 0;
+        filter: alpha(opacity=0);
+        z-index: 99;
       }
     }
     .tipPic {

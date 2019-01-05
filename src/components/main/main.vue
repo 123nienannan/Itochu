@@ -140,7 +140,7 @@ export default {
                 width: 5px;
                 height: 60px;
                 position: absolute;
-                top: calc(50%-30px);
+                top: 20px;
                 right: 0;
                 background-color: #4c83ff;
               }

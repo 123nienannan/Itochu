@@ -76,10 +76,10 @@
                   </div>
                 <div class="sepreate">
                   <div class="checkPicdiv" v-if="scope.row.auditStatus==2">
-                      <el-button class="butt" type="primary" size="mini" round>
+                      <span class="butt" type="primary" size="mini" round>
                         修改头像
                         <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
-                      </el-button>
+                      </span>
                         <p class="tipPic">请上传正面未经ps照片</p>
                     </div>
                 </div>
@@ -151,10 +151,10 @@
           <img :src="headerPic">
         </div>
         <div class="btn-wrap">
-          <button class="btn-upload">
+          <span class="btn-upload">
             上传头像
             <input type="file" accept="image/*" @change="uploadFile" class="upload">
-          </button>
+          </span>
           <p class="tip">请上传正脸照用于人脸识别</p>
           <p class="checkedPic" style="color: #f56c6c;" v-if="checkedPicture">请上传头像</p>
         </div>
@@ -252,10 +252,10 @@
                     <div class="div" v-if="showPass"><img src="../../assets/images/1-4pass.png"></div>
                   </div>
                   <div class="btn-wrap">
-                    <button class="btn-upload">
+                    <span class="btn-upload">
                         更换头像
                       <input type="file" accept="image/*" class="upload" @change="editUploadFile">
-                    </button>
+                    </span>
                     <p class="tip">请上传正面未经PS照片</p>
                     <p class="checkedPic" v-show="checkedamendPicture">更换头像</p>
                   </div>

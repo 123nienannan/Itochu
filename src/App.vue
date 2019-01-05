@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style>
-
+.el-table__empty-text {
+  line-height: 60px;
+}
 </style>

@@ -50,7 +50,7 @@
               :multiple="false"
               v-if="showBulkUpload"
               action="/itochuweb/importPersonExcel">
-              <el-button class="import" size="small" icon="el-icon-upload2" type="primary">批量上传</el-button>
+              <el-button class="import" size="small" icon="el-icon-upload" type="primary">批量导入</el-button>
             </el-upload>
           </el-col>
       </el-row>
@@ -84,9 +84,12 @@
         <template slot-scope="scope">
             <el-popover trigger="hover" placement="right" style="left: 249px;">
                 <div class="popover_box">
-                  <div class="pic-box">
-                    <img class="pic" :src="scope.row.distinguishImgUrl"/>
-                  </div>
+                    <div class="statusFour" v-if="scope.row.auditStatus==4">
+                        <img v-if="showStatusFour" :src="scope.row.distinguishImgUrl"/>
+                    </div>
+                    <div class="pic-box" v-if="scope.row.auditStatus!=4">
+                      <img :src="scope.row.distinguishImgUrl"/>
+                    </div>
                   <div class="sepreate">
                     <div class="checkPicdiv" v-if="scope.row.auditStatus==1">
                       <p class="tip">
@@ -95,24 +98,24 @@
                       </p>
                     </div>
                     <div class="checkPicdiv " v-if="scope.row.auditStatus==2">
-                        <el-button class="butt" type="primary" size="mini" round>
+                        <span class="butt" type="primary" size="mini" round>
                           修改头像
                           <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
-                        </el-button>
+                        </span>
                           <p class="tipPic">请上传正面未经ps照片</p>
                     </div>
                     <div class="checkPicdiv" v-if="scope.row.auditStatus==3">
-                        <el-button class="butt" type="primary" size="mini" round>
+                        <span class="butt" type="primary" size="mini" round>
                           修改头像
                           <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
-                        </el-button>
+                        </span>
                           <p class="tipPic">请上传正面未经ps照片</p>
                     </div>
                     <div class="checkPicdiv" v-if="scope.row.auditStatus==4">
-                        <el-button class="butt" type="primary" size="mini" round>
-                          修改头像
+                        <span class="butt" type="primary" size="mini" round>
+                          上传头像
                           <input type="file" accept="image/*" @change="amendUploadPic($event,scope.row.personId)">
-                        </el-button>
+                        </span>
                           <p class="tipPic">请上传正面未经ps照片</p>
                     </div>
                   </div>
@@ -128,7 +131,7 @@
                       <div class="checkPicaudit"><img style="width:100%;" :src="scope.row.distinguishImgUrl"/></div>
                   </div>
                   <div slot="reference" v-if="scope.row.auditStatus==4">
-                      <div class="checkPicStatus"><img style="width:100%;" src=""/></div>
+                      <div class="anotherStatus"><img style="width:100%;" src=""/></div>
                   </div>
               </el-popover>
         </template>

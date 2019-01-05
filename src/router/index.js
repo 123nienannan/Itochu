@@ -91,21 +91,5 @@ const router = new Router({
     }
   ]
 })
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/login') {
-//     localStorage.removeItem('token')
-//     return next()
-//   }
-//   const token = localStorage.getItem('token')
-//   if (token) {
-//     next()
-//   } else {
-//     next('/login')
-//     Message({
-//       message: '请先登录',
-//       type: 'warning'
-//     });
-//   }
-// })
 
 export default router

@@ -12,7 +12,8 @@
     <span>NO. {{linkNumber}}</span>
   </div>
   <div class="link_content">
-       <div class="mask" v-show="visibleMask">待审核...</div>
+       <div class="mask" v-show="visibleMask">{{showText}}</div>
+       <!-- <div class="mask" v-show="visibleMask">已驳回...</div> -->
        <div class="savePic"><img :src="pictureUpload"></div>
   </div>
   <div class="link_button">
@@ -33,9 +34,10 @@
 
 <script>
 import fetch from "@/utils/fetch"
-import Exif from 'exif-js'
-import {getPersonDetail,uploadBase64,staffBindPhoto} from "@/utils/api"
+import EXIF from 'exif-js'
+import {getPersonDetailBase64,uploadBase64,staffBindPhoto} from "@/utils/api"
 export default {
+  name: 'link',
   data () {
     return {
     personId:"",
@@ -43,156 +45,100 @@ export default {
     linkNumber: "",
     picValue: '',
     pictureUpload: "",
-    visibleMask: false
+    visibleMask: false,
+    showText: ''
     }
   },
   mounted () {
     const personId = this.$route.query.personId
     this.personId = personId
-    this.getPersonDetail({personId:this.personId})
+    this.getPersonDetailBase64({code:this.personId})
   },
   methods: {
     uploadPicture (e) {
+      let that = this
       let files = e.target.files || e.dataTransfer.files
-      if (!files.length) return
       this.picValue = files[0]
       this.imgPreview(this.picValue)
+      EXIF.getData(this.picValue, function () {
+        that.Orientation = EXIF.getTag(this, 'Orientation')
+      })
     },
     imgPreview (file) {
       let self = this
-      let Orientation
-      Exif.getData(file, function () {
-        Orientation = Exif.getTag(this, 'Orientation')
-      })
       if (!file || !window.FileReader) return
       if (/^image/.test(file.type)) {
-        let reader = new FileReader()
+        var reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onloadend = function () {
-          let result = this.result
-          let img = new Image()
-          img.src = result
-          if (this.result.length <= (100 * 1024)) {
-            self.postImg(this.result)
-          } else {
-            img.onload = function () {
-              let data = self.compress(img, Orientation)
-              self.postImg(data)
+          let IMG = new Image()
+          IMG.src = this.result
+          IMG.onload = function () {
+            let w = this.naturalWidth
+            let h = this.naturalHeight
+            let resizeW = 0
+            let resizeH = 0
+            let maxSize = {
+              width: 1280,
+              height: 1280,
+              level: 0.5
             }
+            if (w > maxSize.width || h > maxSize.height) {
+              let multiple = Math.max(w / maxSize.width, h / maxSize.height)
+              resizeW = w / multiple
+              resizeH = h / multiple
+            } else {
+              resizeW = w
+              resizeH = h
+            }
+            let canvas = document.createElement('canvas')
+            let cxt = canvas.getContext('2d')
+            if (self.Orientation === 3) {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.rotate(Math.PI)
+              cxt.drawImage(IMG, 0, 0, -resizeW, -resizeH)
+            } else if (self.Orientation === 8) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI * 3 / 2)
+              cxt.drawImage(IMG, 0, 0, -resizeW, resizeH)
+            } else if (self.Orientation === 6) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI / 2)
+              cxt.drawImage(IMG, 0, 0, resizeW, -resizeH)
+            } else {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.drawImage(IMG, 0, 0, resizeW, resizeH)
+            }
+            self.base64 = canvas.toDataURL('image/jpeg', maxSize.level)
+            self.postImg(self.base64)
           }
         }
       }
     },
     async postImg (data) {
-      let res = await fetch({url: uploadBase64, method: 'post'}, {file: data, personId:this.personId})
+      let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
       this.pictureUpload = res.data.data
       this.visibleMask = true
+      this.showText = "待审核..."
     },
-    rotateImg (img, direction, canvas) {
-      const minStep = 0
-      const maxStep = 3
-      if (img == null) return
-      let height = img.height
-      let width = img.width
-      let step = 2
-      if (step == null) {
-        step = minStep
-      }
-      if (direction === 'right') {
-        step++
-        step > maxStep && (step = minStep)
-      } else {
-        step--
-        step < minStep && (step = maxStep)
-      }
-      let degree = step * 90 * Math.PI / 180
-      let ctx = canvas.getContext('2d')
-      switch (step) {
-        case 0:
-          canvas.width = width
-          canvas.height = height
-          ctx.drawImage(img, 0, 0)
-          break
-        case 1:
-          canvas.width = height
-          canvas.height = width
-          ctx.rotate(degree)
-          ctx.drawImage(img, 0, -height)
-          break
-        case 2:
-          canvas.width = width
-          canvas.height = height
-          ctx.rotate(degree)
-          ctx.drawImage(img, -width, -height)
-          break
-        case 3:
-          canvas.width = height
-          canvas.height = width
-          ctx.rotate(degree)
-          ctx.drawImage(img, -width, 0)
-          break
-      }
-    },
-    compress (img, Orientation) {
-      let canvas = document.createElement('canvas')
-      let ctx = canvas.getContext('2d')
-      let tCanvas = document.createElement('canvas')
-      let tctx = tCanvas.getContext('2d')
-      let width = img.width
-      let height = img.height
-      let ratio
-      if ((ratio = width * height / 4000000) > 1) {
-        ratio = Math.sqrt(ratio)
-        width /= ratio
-        height /= ratio
-      } else {
-        ratio = 1
-      }
-      canvas.width = width
-      canvas.height = height
-      ctx.fillStyle = '#fff'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      let count
-      if ((count = width * height / 1000000) > 1) {
-        count = ~~(Math.sqrt(count) + 1)
-        let nw = ~~(width / count)
-        let nh = ~~(height / count)
-        tCanvas.width = nw
-        tCanvas.height = nh
-        for (let i = 0; i < count; i++) {
-          for (let j = 0; j < count; j++) {
-            tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh)
-            ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh)
-          }
-        }
-      } else {
-        ctx.drawImage(img, 0, 0, width, height)
-      }
-      if (Orientation !== '' && Orientation !== 1) {
-        switch (Orientation) {
-          case 6:
-            this.rotateImg(img, 'left', canvas)
-            break
-          case 8:
-            this.rotateImg(img, 'right', canvas)
-            break
-          case 3:
-            this.rotateImg(img, 'right', canvas)
-            this.rotateImg(img, 'right', canvas)
-            break
-        }
-      }
-      let ndata = canvas.toDataURL('image/jpeg', 0.1)
-      tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
-      return ndata
-    },
-    async getPersonDetail (option) {
-      const res = await fetch({method:'get',url:getPersonDetail},option)
+    async getPersonDetailBase64 (option) {
+      console.log(option)
+      const res = await fetch({method:'get',url:getPersonDetailBase64},option)
+      console.log(res)
       const {data} = res.data
       console.log(data)
       this.pictureUpload = data.photoUrl
       if(data.status == 1) {
         this.visibleMask = true
+        this.showText = "待审核..."
+      }
+      if(data.status == 3) {
+        this.visibleMask = true
+        this.showText = "已驳回..."
       }
       this.linkName = data.personName
       this.linkNumber = data.staffNumber

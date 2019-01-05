@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-import Exif from 'exif-js'
+import EXIF from 'exif-js'
 import {getAdminType,staffAuditStatus,uploadBase64ByPersonId,staffAuditStatusList,getCompanyList,getAparmentList,getAllUserList,addSpecialPerson,deletePerson,getPersonDetail,updateSpecialPerson,uploadBase64} from '@/utils/api'
 export default {
   name: "userListVip",
@@ -102,33 +102,66 @@ export default {
     },
      //列表页面里修改头像
      amendUploadPic (e,id) {
+      let that = this
       this.uploadNeedId = id
       let files = e.target.files || e.dataTransfer.files
-      if (!files.length) return
       this.listPicVal = files[0]
       this.imagePreview(this.listPicVal)
+      EXIF.getData(this.listPicVal, function () {
+        that.Orientation = EXIF.getTag(this, 'Orientation')
+      })
     },
     imagePreview (file) {
       let self = this
-      let Orientation
-      Exif.getData(file, function () {
-        Orientation = Exif.getTag(this, 'Orientation')
-      })
       if (!file || !window.FileReader) return
       if (/^image/.test(file.type)) {
-        let reader = new FileReader()
+        var reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onloadend = function () {
-          let result = this.result
-          let img = new Image()
-          img.src = result
-          if (this.result.length <= (100 * 1024)) {
-            self.postImage(this.result)
-          } else {
-            img.onload = function () {
-              let data = self.compress(img, Orientation)
-              self.postImage(data)
+          let IMG = new Image()
+          IMG.src = this.result
+          IMG.onload = function () {
+            let w = this.naturalWidth
+            let h = this.naturalHeight
+            let resizeW = 0
+            let resizeH = 0
+            let maxSize = {
+              width: 1280,
+              height: 1280,
+              level: 0.5
             }
+            if (w > maxSize.width || h > maxSize.height) {
+              let multiple = Math.max(w / maxSize.width, h / maxSize.height)
+              resizeW = w / multiple
+              resizeH = h / multiple
+            } else {
+              resizeW = w
+              resizeH = h
+            }
+            let canvas = document.createElement('canvas')
+            let cxt = canvas.getContext('2d')
+            if (self.Orientation === 3) {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.rotate(Math.PI)
+              cxt.drawImage(IMG, 0, 0, -resizeW, -resizeH)
+            } else if (self.Orientation === 8) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI * 3 / 2)
+              cxt.drawImage(IMG, 0, 0, -resizeW, resizeH)
+            } else if (self.Orientation === 6) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI / 2)
+              cxt.drawImage(IMG, 0, 0, resizeW, -resizeH)
+            } else {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.drawImage(IMG, 0, 0, resizeW, resizeH)
+            }
+            self.base64 = canvas.toDataURL('image/jpeg', maxSize.level)
+            self.postImage(self.base64)
           }
         }
       }
@@ -144,71 +177,136 @@ export default {
     },
     //点击修改里面的上传头像
     editUploadFile (e) {
+      let that = this
       let files = e.target.files || e.dataTransfer.files
-      if (!files.length) return
       this.edituploadVal = files[0]
       this.editImgPreview(this.edituploadVal)
+      EXIF.getData(this.edituploadVal, function () {
+        that.Orientation = EXIF.getTag(this, 'Orientation')
+      })
     },
     editImgPreview (file) {
       let self = this
-      let Orientation
-      Exif.getData(file, function () {
-        Orientation = Exif.getTag(this, 'Orientation')
-      })
       if (!file || !window.FileReader) return
       if (/^image/.test(file.type)) {
-        let reader = new FileReader()
+        var reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onloadend = function () {
-          let result = this.result
-          let img = new Image()
-          img.src = result
-          if (this.result.length <= (100 * 1024)) {
-            self.editPostImg(this.result)
-          } else {
-            img.onload = function () {
-              let data = self.compress(img, Orientation)
-              self.editPostImg(data)
+          let IMG = new Image()
+          IMG.src = this.result
+          IMG.onload = function () {
+            let w = this.naturalWidth
+            let h = this.naturalHeight
+            let resizeW = 0
+            let resizeH = 0
+            let maxSize = {
+              width: 1280,
+              height: 1280,
+              level: 0.5
             }
+            if (w > maxSize.width || h > maxSize.height) {
+              let multiple = Math.max(w / maxSize.width, h / maxSize.height)
+              resizeW = w / multiple
+              resizeH = h / multiple
+            } else {
+              resizeW = w
+              resizeH = h
+            }
+            let canvas = document.createElement('canvas')
+            let cxt = canvas.getContext('2d')
+            if (self.Orientation === 3) {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.rotate(Math.PI)
+              cxt.drawImage(IMG, 0, 0, -resizeW, -resizeH)
+            } else if (self.Orientation === 8) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI * 3 / 2)
+              cxt.drawImage(IMG, 0, 0, -resizeW, resizeH)
+            } else if (self.Orientation === 6) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI / 2)
+              cxt.drawImage(IMG, 0, 0, resizeW, -resizeH)
+            } else {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.drawImage(IMG, 0, 0, resizeW, resizeH)
+            }
+            self.base64 = canvas.toDataURL('image/jpeg', maxSize.level)
+            self.editPostImg(self.base64)
           }
         }
       }
     },
     async editPostImg (data) {
       let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
-      // this.showPass = true
       this.pic.editheaderPic = res.data.data
       this.addSpecialNeedCondition.photoUrl = res.data.data
     },
 
     //点击添加按钮里面的上传图片所需要的方法
     uploadFile(e){
+      let that = this
       let files = e.target.files || e.dataTransfer.files
-      if (!files.length) return
       this.picValue = files[0]
       this.imgPreview(this.picValue)
+      EXIF.getData(this.picValue, function () {
+        that.Orientation = EXIF.getTag(this, 'Orientation')
+      })
     },
     imgPreview (file) {
       let self = this
-      let Orientation
-      Exif.getData(file, function () {
-        Orientation = Exif.getTag(this, 'Orientation')
-      })
       if (!file || !window.FileReader) return
       if (/^image/.test(file.type)) {
-        let reader = new FileReader()
+        var reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onloadend = function () {
-          let result = this.result
-          let img = new Image()
-          img.src = result
-          if (this.result.length <= (100 * 1024)) {
-            self.postImg(this.result)
-          } else {
-            img.onload = function () {
-              let data = self.compress(img, Orientation)
-              self.postImg(data)
+          let IMG = new Image()
+          IMG.src = this.result
+          IMG.onload = function () {
+            let w = this.naturalWidth
+            let h = this.naturalHeight
+            let resizeW = 0
+            let resizeH = 0
+            let maxSize = {
+              width: 1280,
+              height: 1280,
+              level: 0.5
             }
+            if (w > maxSize.width || h > maxSize.height) {
+              let multiple = Math.max(w / maxSize.width, h / maxSize.height)
+              resizeW = w / multiple
+              resizeH = h / multiple
+            } else {
+              resizeW = w
+              resizeH = h
+            }
+            let canvas = document.createElement('canvas')
+            let cxt = canvas.getContext('2d')
+            if (self.Orientation === 3) {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.rotate(Math.PI)
+              cxt.drawImage(IMG, 0, 0, -resizeW, -resizeH)
+            } else if (self.Orientation === 8) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI * 3 / 2)
+              cxt.drawImage(IMG, 0, 0, -resizeW, resizeH)
+            } else if (self.Orientation === 6) {
+              canvas.width = resizeH
+              canvas.height = resizeW
+              cxt.rotate(Math.PI / 2)
+              cxt.drawImage(IMG, 0, 0, resizeW, -resizeH)
+            } else {
+              canvas.width = resizeW
+              canvas.height = resizeH
+              cxt.drawImage(IMG, 0, 0, resizeW, resizeH)
+            }
+            self.base64 = canvas.toDataURL('image/jpeg', maxSize.level)
+            self.postImg(self.base64)
           }
         }
       }
@@ -218,104 +316,6 @@ export default {
       let res = await fetch({url: uploadBase64, method: 'post'}, {file: data})
       this.headerPic = res.data.data
       this.checkedPicture = false
-    },
-    rotateImg (img, direction, canvas) {
-      const minStep = 0
-      const maxStep = 3
-      if (img == null) return
-      let height = img.height
-      let width = img.width
-      let step = 2
-      if (step == null) {
-        step = minStep
-      }
-      if (direction === 'right') {
-        step++
-        step > maxStep && (step = minStep)
-      } else {
-        step--
-        step < minStep && (step = maxStep)
-      }
-      let degree = step * 90 * Math.PI / 180
-      let ctx = canvas.getContext('2d')
-      switch (step) {
-        case 0:
-          canvas.width = width
-          canvas.height = height
-          ctx.drawImage(img, 0, 0)
-          break
-        case 1:
-          canvas.width = height
-          canvas.height = width
-          ctx.rotate(degree)
-          ctx.drawImage(img, 0, -height)
-          break
-        case 2:
-          canvas.width = width
-          canvas.height = height
-          ctx.rotate(degree)
-          ctx.drawImage(img, -width, -height)
-          break
-        case 3:
-          canvas.width = height
-          canvas.height = width
-          ctx.rotate(degree)
-          ctx.drawImage(img, -width, 0)
-          break
-      }
-    },
-    compress (img, Orientation) {
-      let canvas = document.createElement('canvas')
-      let ctx = canvas.getContext('2d')
-      let tCanvas = document.createElement('canvas')
-      let tctx = tCanvas.getContext('2d')
-      let width = img.width
-      let height = img.height
-      let ratio
-      if ((ratio = width * height / 4000000) > 1) {
-        ratio = Math.sqrt(ratio)
-        width /= ratio
-        height /= ratio
-      } else {
-        ratio = 1
-      }
-      canvas.width = width
-      canvas.height = height
-      ctx.fillStyle = '#fff'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      let count
-      if ((count = width * height / 1000000) > 1) {
-        count = ~~(Math.sqrt(count) + 1)
-        let nw = ~~(width / count)
-        let nh = ~~(height / count)
-        tCanvas.width = nw
-        tCanvas.height = nh
-        for (let i = 0; i < count; i++) {
-          for (let j = 0; j < count; j++) {
-            tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh)
-            ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh)
-          }
-        }
-      } else {
-        ctx.drawImage(img, 0, 0, width, height)
-      }
-      if (Orientation !== '' && Orientation !== 1) {
-        switch (Orientation) {
-          case 6:
-            this.rotateImg(img, 'left', canvas)
-            break
-          case 8:
-            this.rotateImg(img, 'right', canvas)
-            break
-          case 3:
-            this.rotateImg(img, 'right', canvas)
-            this.rotateImg(img, 'right', canvas)
-            break
-        }
-      }
-      let ndata = canvas.toDataURL('image/jpeg', 0.1)
-      tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
-      return ndata
     },
     cancleAction () {
       this.showaddSpUserDialog = false
@@ -518,6 +518,7 @@ export default {
       .then(_ => {
         done()
         this.$refs.addSpecialUserForm.resetFields()
+        this.headerPic = ""
         this.checkedPicture = false
       })
       .catch(_ => {})

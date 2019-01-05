@@ -13,11 +13,11 @@
         </el-form-item>
         <el-form-item label-width="0" prop="password">
           <img class="passwordpng" src="@/assets/images/icon-password.png">
-          <el-input class="input" type="password"  v-model="loginForm.password" @keyup.enter.native="login('loginForm')" placeholder="密码"></el-input>
+          <el-input class="input" type="password"  v-model="loginForm.password" @keyup.enter.native="login" placeholder="密码"></el-input>
         </el-form-item>
         <el-form-item>
           <div class="btn-wrap">
-            <button class="btn-login" @click.prevent="login('loginForm')">登录<i class="icon-arrow-right"></i></button>
+            <button class="btn-login" @click.prevent="login">登录<i class="icon-arrow-right"></i></button>
           </div>
         </el-form-item>
       </el-form>
@@ -42,13 +42,11 @@ export default {
     };
   },
   methods: {
-    login(name) {
-      this.$refs[name].validate(valid => {
+    login() {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
           fetch({ method: "post", url: login }, this.loginForm ).then(
             res => {
-              // res.data.data.token = "token"
-              // localStorage.setItem('token', res.data.data.token)
               this.$router.push({ name: "UserList" })
             }
           );
@@ -69,6 +67,7 @@ export default {
   background-image: linear-gradient(-45deg, #e6e9ed 0%, #f9f9f9 100%);
 }
 .login_box {
+  border-radius: 6px;
   box-shadow: 1px 4px 1px #e9e9e9;
   background-color: #fff;
   width: 556px;
