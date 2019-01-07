@@ -48,14 +48,13 @@
               class="upload-demo"
               name="excelFile"
               :multiple="false"
-              v-if="showBulkUpload"
+              v-if="type==1"
               action="/itochuweb/importPersonExcel">
               <el-button class="import" size="small" icon="el-icon-upload" type="primary">批量导入</el-button>
             </el-upload>
           </el-col>
       </el-row>
   </div>
-
     <div class="table">
       <!-- 表格部分 -->
       <el-table
@@ -186,7 +185,6 @@
         </template>
       </el-table-column>
       </el-table>
-
      <div class="footer">
           <!-- 通过驳回按钮 -->
         <div class="bulk">

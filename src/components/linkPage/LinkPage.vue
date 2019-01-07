@@ -19,7 +19,7 @@
   <div class="link_button">
     <span>
        上传头像
-       <input @change="uploadPicture" accept="image/*" type="file">
+       <input @change="uploadPicture" multiple accept="image/*" type="file">
     </span>
   </div>
   <div class="link_tip">
@@ -34,7 +34,7 @@
 
 <script>
 import fetch from "@/utils/fetch"
-import EXIF from 'exif-js'
+import EXIF from '@/utils/exif'
 import {getPersonDetailBase64,uploadBase64,staffBindPhoto} from "@/utils/api"
 export default {
   name: 'link',
@@ -81,7 +81,7 @@ export default {
             let maxSize = {
               width: 1280,
               height: 1280,
-              level: 0.5
+              level: 0.6
             }
             if (w > maxSize.width || h > maxSize.height) {
               let multiple = Math.max(w / maxSize.width, h / maxSize.height)

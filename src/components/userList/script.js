@@ -1,5 +1,6 @@
 import fetch from '@/utils/fetch'
 import EXIF from 'exif-js'
+import {mapState} from 'vuex'
 import {getAdminType,staffAuditStatus,staffAuditStatusList,uploadBase64ByPersonId,getCompanyList,getAparmentList,getAllUserList,importPersonExcel,sendLink} from '@/utils/api'
 export default {
   name: "userList",
@@ -7,6 +8,7 @@ export default {
     return {
       companyVal: '',
       companyValId: '',
+      type:'',
       departmentVal: '',
       uploadpicVal: '',
       searchText: '',
@@ -16,7 +18,6 @@ export default {
       curPage: 1,
       totalPage: 0,
       showStatusFour:false,
-      showBulkUpload: true,
       pictures: [
         {
           picId: "1",
@@ -36,9 +37,7 @@ export default {
       },
       picValue: '',
       personIds: [],
-      vals: [],
-      type: ''
-
+      vals: []
     }
   },
   created() {
@@ -51,15 +50,15 @@ export default {
   },
   methods: {
     //员工审核
-  async getadminType() {
-    const res = await fetch({method:'get',url:getAdminType})
-    this.type=res.data.data.type
-    if(this.type != 1) {
-      this.companyVal = res.data.data.companyName
-      this.companyValId = res.data.data.companyId
-      this.showBulkUpload = false
-     }
-  },
+    async getadminType() {
+      const res = await fetch({method:'get',url:getAdminType})
+      this.type=res.data.data.type
+      if(this.type != 1) {
+        this.companyVal = res.data.data.companyName
+        this.companyValId = res.data.data.companyId
+        this.showBulkUpload = false
+      }
+    },
     companyChange() {
       this.companyValId = this.companyVal
     },
@@ -190,7 +189,7 @@ export default {
         message: '发送链接成功',
         type: 'success'
       });
-      // this.$router.push({name: 'LinkPage'})
+      this.$router.push({name: 'LinkPage'})
     },
     async getAllUserList (pageNum,pageSize,companyId,departmentId,imgType,personName ) {
       const params = {

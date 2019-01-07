@@ -86,6 +86,7 @@ export default {
   methods: {
     async getType() {
       const res = await fetch({ method: "get", url: getAdminType })
+      const {type,companyId,companyName} = res.data.data
       this.loginName = res.data.data.userName;
       if (res.data.data.type == 1) {
         this.showAdmin = true

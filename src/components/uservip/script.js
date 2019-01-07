@@ -168,7 +168,7 @@ export default {
     },
     async postImage (data) {
       let res = await fetch({url: uploadBase64ByPersonId, method: 'post'}, {file: data, personId:this.uploadNeedId})
-      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyVal,this.departmentVal,this.uploadpicVal,this.searchText)
+      this.getSpecialAllUserList(this.curPage,this.pageSize,this.companyValId,this.departmentVal,this.uploadpicVal,this.searchText)
     },
     //员工审核
     async operation (personId,auditStatus) {
