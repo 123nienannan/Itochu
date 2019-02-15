@@ -1,45 +1,44 @@
 <template>
   <div class="wrapper">
     <el-container class="main">
-      <el-aside class="aside" width="100px" style="overflow: hidden;">
-        <div class="menu">
-          <img src="@/assets/images/menu.png">
+      <el-aside class="aside" :class="{shrink:asideShow,extend:!asideShow}">
+        <div class="menu" v-if="shrink" >
+          <img src="@/assets/images/menu.png" @click="showShrink">
+        </div>
+        <div class="anther-menu" v-if="!shrink">
+          <span class="logo-text">ITOCHU</span>
+          <img src="@/assets/images/anther-menu.png" @click="showextend">
         </div>
         <ul>
           <li>
-            <el-tooltip class="item" effect="dark" content="人员管理" placement="right">
-                <router-link :to="{name: 'UserList'}">
-                <i class="side_icon icon-user"></i>
+                <router-link :class="{extened:showExtened}" :to="{name: 'UserList'}">
+                  <i class="side_icon icon-user"></i>
+                  <span class="title" v-if="show">人员管理</span>
                 </router-link>
-            </el-tooltip>
           </li>
           <li>
-            <el-tooltip class="item" effect="dark" content="特殊人员" placement="right">
-              <router-link :to="{name: 'userVipList'}">
+              <router-link :class="{extened:showExtened}" :to="{name: 'userVipList'}">
                 <i class="side_icon icon-special"></i>
+                <span class="title" v-if="show">特殊人员</span>
               </router-link>
-            </el-tooltip>
           </li>
           <li>
-            <el-tooltip class="item" effect="dark" content="考勤管理" placement="right">
-              <router-link :to="{name: 'testMange'}">
+              <router-link :class="{extened:showExtened}" :to="{name: 'testMange'}">
                 <i class="side_icon icon-calendar"></i>
+                <span class="title" v-if="show">考勤管理</span>
               </router-link>
-            </el-tooltip>
           </li>
           <li>
-            <el-tooltip class="item" effect="dark" content="出入记录" placement="right">
-              <router-link :to="{name: 'Access'}">
+              <router-link :class="{extened:showExtened}" :to="{name: 'Access'}">
                 <i class="side_icon icon-access"></i>
+                <span class="title" v-if="show">出入记录</span>
               </router-link>
-            </el-tooltip>
           </li>
           <li v-if="showAdmin">
-            <el-tooltip class="item" effect="dark" content="管理员" placement="right">
-              <router-link :to="{name: 'rightAdmin'}">
+              <router-link :class="{extened:showExtened}" :to="{name: 'rightAdmin'}">
                 <i class="side_icon icon-admin"></i>
+                <span class="title" v-if="show">管理员</span>
               </router-link>
-            </el-tooltip>
           </li>
         </ul>
       </el-aside>
@@ -77,13 +76,29 @@ export default {
   data() {
     return {
       loginName: "",
-      showAdmin: false
+      showAdmin: false,
+      shrink:true,
+      show:false,
+      asideShow:true,
+      showExtened:true
     };
   },
   mounted() {
     this.getType()
   },
   methods: {
+    showShrink () {
+     this.asideShow = false
+     this.show = true
+     this.shrink = false
+     this.showExtened = false
+    },
+    showextend () {
+     this.asideShow = true
+     this.show = false
+     this.shrink = true
+     this.showExtened = true
+    },
     async getType() {
       const res = await fetch({ method: "get", url: getAdminType })
       this.loginName = res.data.data.userName;
@@ -113,7 +128,7 @@ export default {
       border-right: 1px solid #e6e7e9;
       .menu {
         text-align: center;
-        width: 100px;
+        width: 80px;
         height: 80px;
         line-height: 80px;
         box-sizing: border-box;
@@ -123,25 +138,53 @@ export default {
           height: 20px;
         }
       }
+      .anther-menu {
+        padding-left: 20px;
+        width: 160px;
+        height: 80px;
+        line-height: 80px;
+        box-sizing: border-box;
+        border-bottom: solid 1px #e6e7e9;
+        .logo-text {
+          padding-right: 8px;
+          color: #003291;
+          font-size: 22px;
+          font-weight: 700;
+        }
+      }
       ul {
-        margin-top: 100px;
         li {
           a {
+            text-decoration: none;
+            color: #afb4c4;
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 160px;
+            height: 80px;
             display: flex;
             align-items: center;
+            box-sizing: border-box;
             justify-content: center;
+            &.extened {
+              text-decoration: none;
+              color: #afb4c4;
+              position: relative;
+              width: 80px;
+              height: 80px;
+              display: flex;
+              align-items: center;
+              box-sizing: border-box;
+              justify-content: center;
+            }
             &.router-link-active {
               background-color: #ecf5ff;
+              color: #000;
               &::after {
                 content: "";
-                width: 5px;
-                height: 60px;
+                width: 4px;
+                height: 80px;
                 position: absolute;
-                top: 20px;
-                right: 0;
+                top: 0;
+                left: 0;
                 background-color: #4c83ff;
               }
               .icon-user {
@@ -164,6 +207,9 @@ export default {
                 background: url("./../../assets/images/icon-admin-active.png")
                   no-repeat;
               }
+            }
+            .title {
+              padding-left: 10px;
             }
           }
           .side_icon {
@@ -234,9 +280,17 @@ export default {
 }
 </style>
 <style>
-.el-aside,
 .el-main {
   overflow: hidden;
+}
+.el-aside {
+ overflow: hidden;
+}
+.el-aside.shrink {
+ width: 80px !important;
+}
+.el-aside.extend {
+ width: 160px !important;
 }
 .el-main {
   overflow: auto;

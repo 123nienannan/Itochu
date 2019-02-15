@@ -1,5 +1,5 @@
-// const baseUrl="https://aiface.itochu-intra.com.cn/itochuweb"
-const baseUrl="/itochuweb"      //根api
+const baseUrl="https://aiface.itochu-intra.com.cn/itochuweb"
+// const baseUrl="/itochuweb"      //根api
 const getCompanyList=baseUrl+"/getAllCompany?time="+Math.random()   //获取全部公司
 const login=baseUrl+"/user/login?time="+Math.random()  //登录接口
 const getAparmentList = baseUrl + "/getAllDepartMent?time="+Math.random() //获取某公司的全部部门
