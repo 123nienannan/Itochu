@@ -17,7 +17,7 @@ const fetch = (opts, data) => {
   let httpDefaultOpts = {
     method: opts.method,
     url: opts.url,
-    timeout: 10000,
+    timeout: 100000,
     params: data,
     data: data,
     headers: opts.method === 'get' ? {
@@ -39,6 +39,7 @@ const fetch = (opts, data) => {
   let promise = new Promise(function (resolve, reject) {
     axios(httpDefaultOpts).then(
       (res) => {
+        console.log(res);
         if(res.data.errcode == -1) {
           router.push({name:"Login"})
           Message({

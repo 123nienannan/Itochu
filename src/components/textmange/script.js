@@ -4,6 +4,7 @@ export default {
   name: "textMange",
   data () {
     return {
+      loading: false,
       attendanceDate: '',
       curPage:1,
       pageSize:10,
@@ -34,10 +35,13 @@ export default {
       this.curPage = curPage
       this.getAllAttendanceList(this.curPage,this.pageSize,this.attendanceDate)
     },
-    async importAttendance () {
-     const res = await fetch({method:'post',url:importAttendanceExcel},{attendanceDate:this.attendanceDate})
-     const {data} = res.data
-     window.location.href = data
+    importAttendance () {
+       this.loading = true
+       setTimeout(() => {
+        this.loading = false
+      }, 10000)
+      const form = document.getElementsByTagName("form")[0]
+      form.action="/itochuweb/importAttendanceExcel?attendanceDate="+this.attendanceDate+""
     }
   }
 }

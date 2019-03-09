@@ -1,4 +1,8 @@
-<div class="mange">
+
+<div class="mange"  v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="mange_top">
         <el-row>
             <el-col :span="12">
@@ -12,14 +16,15 @@
                  </el-date-picker>
             </el-col>
             <el-col align="right" :span="12">
-                <el-button @click="importAttendance" class="import add_btn" round>
-                    <img src="@/assets/images/1-1output.png">
-                    <span>批量导出</span>
-                </el-button>
+                <form method='post' name="form" enctype='application/json' action="/itochuweb/importAttendanceExcel">
+                  <button  class="import add_btn" @click='importAttendance'>
+                      <img src="@/assets/images/1-1output.png">
+                      <span>批量导出</span>
+                  </button>
+                </form>
             </el-col>
         </el-row>
     </div>
-
       <div class="table">
         <!-- 表格部分 -->
         <el-table
@@ -77,4 +82,4 @@
        </div>
 
     </div>
-  </div>
+</div>

@@ -4,6 +4,7 @@ export default {
   name: "Access",
   data() {
     return {
+      loading: false,
       accessDate: '',
       curPage: 1,
       pageSize: 10,
@@ -40,17 +41,14 @@ export default {
       this.curPage = curPage
       this.getAllAccessList(this.curPage, this.pageSize, this.accessDate)
     },
-    async importAccess() {
-      const res = await fetch({
-        method: "post",
-        url: importAccessExcel
-      }, {
-        accessDate: this.accessDate
-      })
-      const {
-        data
-      } = res.data
-      window.location.href = data
+    importAccess() {
+      this.loading = true
+       setTimeout(() => {
+        this.loading = false
+      }, 10000)
+
+      const f = document.getElementsByTagName("form")[0]
+      f.action="/itochuweb/importAccessExcel?accessDate="+this.accessDate+""
     }
   }
 }

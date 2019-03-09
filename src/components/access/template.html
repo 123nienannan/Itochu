@@ -1,4 +1,9 @@
-<div class="access">
+<div class="access"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+>
   <div class="access_top">
     <el-row>
       <el-col :span="12">
@@ -7,10 +12,12 @@
         </el-date-picker>
       </el-col>
       <el-col align="right" :span="12">
-        <el-button @click="importAccess" class="import add_btn" round>
+        <form method='post' name="form" enctype='application/json' action="/itochuweb/importAccessExcel">
+        <button class="import add_btn" @click='importAccess'>
           <img src="@/assets/images/1-1output.png">
           <span>批量导出</span>
-        </el-button>
+        </button>
+      </form>
       </el-col>
     </el-row>
   </div>
