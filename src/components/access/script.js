@@ -45,10 +45,9 @@ export default {
       this.loading = true
        setTimeout(() => {
         this.loading = false
-      }, 10000)
-
+      }, 5000)
       const f = document.getElementsByTagName("form")[0]
-      f.action="/itochuweb/importAccessExcel?accessDate="+this.accessDate+""
+      f.action="/itochuweb/importAccessExcel?accessDate="+this.accessDate
     }
   }
 }

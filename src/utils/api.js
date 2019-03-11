@@ -1,4 +1,4 @@
-const baseUrl="/itochuweb"
+const baseUrl="https://twc.digirogar.com"
 // const baseUrl="/itochuweb"      //根api
 const getCompanyList=baseUrl+"/getAllCompany?time="+Math.random()   //获取全部公司
 const login=baseUrl+"/user/login?time="+Math.random()  //登录接口

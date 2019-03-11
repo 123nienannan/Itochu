@@ -1,8 +1,8 @@
 <div class="access"
       v-loading="loading"
-      element-loading-text="拼命加载中"
+      element-loading-text="数据导出中，请耐心等待......"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)"
+      element-loading-background="rgba(0, 0, 0, 0)"
 >
   <div class="access_top">
     <el-row>
@@ -12,7 +12,7 @@
         </el-date-picker>
       </el-col>
       <el-col align="right" :span="12">
-        <form method='post' name="form" enctype='application/json' action="/itochuweb/importAccessExcel">
+        <form method='post' name="form" enctype='application/json'>
         <button class="import add_btn" @click='importAccess'>
           <img src="@/assets/images/1-1output.png">
           <span>批量导出</span>

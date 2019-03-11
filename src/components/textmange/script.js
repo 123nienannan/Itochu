@@ -2,6 +2,7 @@ import fetch from '@/utils/fetch'
 import {getAllAttendanceList,importAttendanceExcel} from '@/utils/api'
 export default {
   name: "textMange",
+
   data () {
     return {
       loading: false,
@@ -39,9 +40,9 @@ export default {
        this.loading = true
        setTimeout(() => {
         this.loading = false
-      }, 10000)
+      }, 5000)
       const form = document.getElementsByTagName("form")[0]
-      form.action="/itochuweb/importAttendanceExcel?attendanceDate="+this.attendanceDate+""
+      form.action="/itochuweb/importAttendanceExcel?attendanceDate="+this.attendanceDate
     }
   }
 }
