@@ -1,22 +1,40 @@
-
 <div class="mange"  v-loading="loading"
       element-loading-text="数据导出中，请耐心等待......"
       element-loading-spinner="el-icon-loading"
       customClass='loading'
       element-loading-background="rgba(0, 0, 0, 0)">
     <div class="mange_top">
-        <el-row>
-            <el-col :span="12">
+        <el-row :gutter="20">
+            <el-col :span="4">
                     <el-date-picker
                     @change="changeDate"
                     class="date"
                     value-format="yyyy-MM-dd HH:mm:ss"
-                    v-model="attendanceDate"
+                    v-model="attendanceStartDate"
                     type="date"
-                    placeholder="选择日期">
+                    placeholder="开始日期">
                  </el-date-picker>
             </el-col>
-            <el-col align="right" :span="12">
+            <el-col :span="4">
+              <el-date-picker
+                @change="changeDate"
+                class="date"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                v-model="attendanceEndDate"
+                type="date"
+                placeholder="结束日期">
+              </el-date-picker>
+            </el-col>
+            <el-col :span='5'>
+              <el-input v-model='number' placeholder='选择工号'></el-input>
+            </el-col>
+            <el-col :span='5'>
+              <el-input v-model='name' placeholder='请输入姓名'></el-input>
+            </el-col>
+            <el-col :span='3' align='right'>
+              <el-button type='primary'>搜索</el-button>
+            </el-col>
+            <el-col align="right" :span="3">
                 <form method='post' name="form" enctype='application/json'>
                   <button  class="import add_btn" @click='importAttendance'>
                       <img src="@/assets/images/1-1output.png">

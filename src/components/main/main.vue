@@ -11,15 +11,21 @@
         </div>
         <ul>
           <li>
-                <router-link :class="{extened:showExtened}" :to="{name: 'UserList'}">
-                  <i class="side_icon icon-user"></i>
-                  <span class="title" v-if="show">人员管理</span>
-                </router-link>
+              <router-link :class="{extened:showExtened}" :to="{name: 'UserList'}">
+                <i class="side_icon icon-user"></i>
+                <span class="title" v-if="show">人员管理</span>
+              </router-link>
           </li>
-          <li>
+           <li>
               <router-link :class="{extened:showExtened}" :to="{name: 'userVipList'}">
                 <i class="side_icon icon-special"></i>
                 <span class="title" v-if="show">特殊人员</span>
+              </router-link>
+          </li>
+          <li>
+              <router-link :class="{extened:showExtened}" :to="{name: 'Leader'}">
+                <i class="side_icon icon-leader"></i>
+                <span class="title" v-if="show">领导人员</span>
               </router-link>
           </li>
           <li>
@@ -55,7 +61,8 @@
                     {{loginName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>退出</el-dropdown-item>
+                      <el-dropdown-item command="b">修改密码</el-dropdown-item>
+                      <el-dropdown-item command="a">退出</el-dropdown-item>
                     </el-dropdown-menu>
                </el-dropdown>
            </div>
@@ -66,6 +73,45 @@
         </el-main>
       </el-container>
     </el-container>
+    <!-- 修改密码的弹框 -->
+    <el-dialog
+          title="修改密码"
+          :visible.sync="showEditPassword"
+          width="35%"
+          :before-close="edithandleClose">
+          <el-form
+          :rules="rules"
+          ref="EditPassword"
+          :model="EditPassword"
+          >
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-row>
+                  <el-col :span="24">
+                    <el-form-item prop="userName">
+                      <h3 class="title">原密码</h3>
+                      <el-input v-model="EditPassword.userName" placeholder="请填写原密码"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                  <el-row>
+                      <el-col :span="24">
+                        <el-form-item prop="email">
+                          <h3 class="title">新密码</h3>
+                          <el-input v-model="EditPassword.email" placeholder="请填写新密码"></el-input>
+                        </el-form-item>
+                      </el-col>
+                  </el-row>
+              </el-col>
+            </el-row>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+              <el-button class="cancle_btn"  @click="cancle" size="mini" round>取 消</el-button>
+              <el-button type="primary" @click="confirm" size="mini" round>确 定</el-button>
+          </span>
+        </el-dialog>
   </div>
 </template>
 
@@ -80,13 +126,25 @@ export default {
       shrink:true,
       show:false,
       asideShow:true,
-      showExtened:true
-    };
+      showExtened:true,
+      showEditPassword:false,
+      rules: {},
+      EditPassword: {}
+    }
   },
   mounted() {
     this.getType()
   },
   methods: {
+    cancle () {
+      this.showEditPassword = false
+    },
+    confirm () {
+
+    },
+    edithandleClose () {
+       this.showEditPassword = false
+    },
     showShrink () {
      this.asideShow = false
      this.show = true
@@ -108,9 +166,14 @@ export default {
         this.showAdmin = false
       }
     },
-    async handleCommand() {
-      const res = await fetch({ method: "post", url: loginOut })
-      this.$router.push({ name: "Login" })
+    async handleCommand(command) {
+      if(command == 'a') {
+        const res = await fetch({ method: "post", url: loginOut })
+        this.$router.push({ name: "Login" })
+      }
+      if(command == 'b') {
+        this.showEditPassword = true
+      }
     }
   }
 };
@@ -124,6 +187,7 @@ export default {
   .main {
     height: 100%;
     .aside {
+      overflow: hidden;
       background-color: #fff;
       border-right: 1px solid #e6e7e9;
       .menu {
@@ -187,6 +251,10 @@ export default {
                 left: 0;
                 background-color: #4c83ff;
               }
+              .icon-leader {
+                background: url("./../../assets/images/icon-user-active.png")
+                  no-repeat;
+              }
               .icon-user {
                 background: url("./../../assets/images/icon-user-active.png")
                   no-repeat;
@@ -216,6 +284,9 @@ export default {
             width: 30px;
             height: 30px;
             background-size: cover;
+          }
+          .icon-leader {
+            background: url("./../../assets/images/icon-user.png") no-repeat;
           }
           .icon-user {
             background: url("./../../assets/images/icon-user.png") no-repeat;
@@ -282,6 +353,12 @@ export default {
 <style>
 .el-main {
   overflow: hidden;
+}
+.el-input__inner {
+  outline: none;
+  border: 0;
+  box-shadow: 0px 8px 20px 4px
+  rgba(86, 97, 129, 0.08);
 }
 .el-aside {
  overflow: hidden;

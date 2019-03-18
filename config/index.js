@@ -11,8 +11,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      //'/itochuWeb'是baseUrl
       '/itochuweb':{
-        target:"http://192.168.0.134:8080",
+        // target:"http://192.168.0.134:8080",
+        target:'https://twc.digirogar.com',
         changeOrigin:true
       }
     },

@@ -6,11 +6,14 @@ export default {
   data () {
     return {
       loading: false,
-      attendanceDate: '',
+      attendanceStartDate: '',
+      attendanceEndDate:'',
       curPage:1,
       pageSize:10,
       totalPage:0,
-      attendanceList:[]
+      attendanceList:[],
+      number:'',
+      name:''
     }
   },
   created () {

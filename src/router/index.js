@@ -14,6 +14,7 @@ const testMange = () => import(/* webpackChunkName: 'home' */ '@/components/text
 const Access = () => import(/* webpackChunkName: 'home' */ '@/components/access')
 // import rightAdmin from '@/components/right'
 const rightAdmin = () => import(/* webpackChunkName: 'home' */ '@/components/right')
+const Leader = () => import(/* webpackChunkName: 'home' */ '@/components/leader/Leader')
 import LinkPage from '@/components/linkPage/LinkPage'
 
 Vue.use(Router)
@@ -69,6 +70,14 @@ const router = new Router({
           name: 'Access',
           meta: {
             title: '出入记录'
+         }
+        },
+        {
+          path: '/leader',
+          component: Leader,
+          name: 'Leader',
+          meta: {
+            title: '领导人员'
          }
         },
         {
